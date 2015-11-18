@@ -21,3 +21,12 @@
   <h4>Karma</h4>
   <p>Spectacular Test Runner for JavaScript.</p>
 </div>
+
+<div>
+  <input type="text" ng-model="main.habitName"/> <button class="btn btn-primary" ng-click="main.addHabit(main.habitName)">Add</button>
+</div>
+<div>
+  <ul>
+    <li ng-repeat="habit in main.habits" ng-bind="habit"></li>
+  </ul>
+</div>

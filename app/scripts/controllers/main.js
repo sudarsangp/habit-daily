@@ -14,4 +14,10 @@ angular.module('codeApp')
       'AngularJS',
       'Karma'
     ];
+    this.habits = [];
+    this.addHabit = addHabit;
+
+    function addHabit(habitName) {
+    	this.habits.push(habitName);
+    };
   });
