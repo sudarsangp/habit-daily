@@ -26,15 +26,48 @@ describe('Controller: MainCtrl', function () {
   */
   describe('add habit', function(){
     // critical
-    it('ensure invalid habit details are caught', function() {});
+    describe('ensure invalid habit details are caught', function() {
 
-    it('ensure valid habit details pass validation', function() {
-      expect(MainCtrl.habits.length).toBe(0);
-      MainCtrl.addHabit('language');
-      expect(MainCtrl.habits.length).toBe(1);
-      expect(MainCtrl.habits[0]).toEqual('language');
+      it('empty undefined habit should not be created', function(){
+        expect(MainCtrl.habits.length).toBe(0);
+        MainCtrl.addHabit();
+        expect(MainCtrl.habits.length).toBe(0);
+      });
+      
+      it('empty string habit should not be created', function(){
+        expect(MainCtrl.habits.length).toBe(0);
+        MainCtrl.addHabit("");
+        expect(MainCtrl.habits.length).toBe(0);
+      });
     });
 
-    it('ensure adding habit shows added habit', function() {});
+    it('ensure valid habit details pass validation', function() {
+      var testHabit = 'learn language';
+      expect(MainCtrl.habits.length).toBe(0);
+      MainCtrl.addHabit(testHabit);
+      expect(MainCtrl.habits.length).toBe(1);
+      expect(MainCtrl.habits[0]).toEqual(testHabit);
+    });
+
+    // good-to-have
+    it('input field should be cleared after adding habits', function() {});
+    it('able to add habits with pressing enter', function() {});
   });
+
+  /* User Story
+  ** As a user, i should be able to remove a habit
+  */
+  describe('remove habit', function(){
+    it('ensure habit at a particular index can be removed', function(){
+      MainCtrl.addHabit('ok');
+      expect(MainCtrl.habits.length).toBe(1);
+      MainCtrl.removeHabit(0);
+      expect(MainCtrl.habits.length).toBe(0);
+    });
+  });
+
+  /* User Story
+  ** As a user, i should be able to edit an existing habit
+  */
+
 });

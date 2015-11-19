@@ -1,3 +1,17 @@
+<div class="row">
+  <div class="col-xs-4">
+    <input type="text" class="form-control" ng-model="main.habitName"/>
+  </div>
+  <div class="col-xs-2">
+    <button class="btn btn-primary" ng-click="main.addHabit(main.habitName)">Add</button>
+  </div>
+</div>
+
+<div class="row" ng-repeat="habit in main.habits">
+  <span ng-bind="habit"></span>
+  <i class="fa fa-times" ng-click="main.removeHabit($index)"></i>
+</div>
+
 <div class="jumbotron">
   <h1>'Allo, 'Allo!</h1>
   <p class="lead">
@@ -22,11 +36,3 @@
   <p>Spectacular Test Runner for JavaScript.</p>
 </div>
 
-<div>
-  <input type="text" ng-model="main.habitName"/> <button class="btn btn-primary" ng-click="main.addHabit(main.habitName)">Add</button>
-</div>
-<div>
-  <ul>
-    <li ng-repeat="habit in main.habits" ng-bind="habit"></li>
-  </ul>
-</div>

@@ -14,10 +14,18 @@ angular.module('codeApp')
       'AngularJS',
       'Karma'
     ];
+
     this.habits = [];
     this.addHabit = addHabit;
+    this.removeHabit = removeHabit;
 
     function addHabit(habitName) {
-    	this.habits.push(habitName);
-    };
+      if(habitName){
+        this.habits.push(habitName);
+      }
+    }
+
+    function removeHabit(position) {
+      this.habits.splice(position, 1);
+    }
   });
