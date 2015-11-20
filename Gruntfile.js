@@ -456,6 +456,31 @@ module.exports = function (grunt) {
         configFile: 'test/karma.conf.js',
         singleRun: true
       }
+    },
+
+    protractor: {
+      options: {
+        configFile: 'node_modules/protractor/example/conf.js',
+        keepAlive: true,
+        noColor: false,
+        args: {
+
+        }
+      },
+      scenario: {
+        options: {
+          configFile: 'test/protractor.conf.js',
+          args: {}
+        }
+      }
+    },
+
+    protractor_webdriver: {
+      scenario: {
+        options: {
+          path: 'node_modules/protractor/bin/'
+        }
+      }
     }
   });
 
@@ -486,7 +511,8 @@ module.exports = function (grunt) {
     'concurrent:test',
     'postcss',
     'connect:test',
-    'karma'
+    'karma',
+    'protractor'
   ]);
 
   grunt.registerTask('build', [
@@ -513,4 +539,7 @@ module.exports = function (grunt) {
     'test',
     'build'
   ]);
+
+  grunt.loadNpmTasks('grunt-protractor-runner');
+  grunt.loadNpmTasks('grunt-protractor-webdriver');
 };
