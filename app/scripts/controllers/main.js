@@ -1,11 +1,10 @@
 'use strict';
 
 /**
- * @ngdoc function
+ * @ngdoc controller
  * @name codeApp.controller:MainCtrl
  * @description
- * # MainCtrl
- * Controller of the codeApp
+ * to handle basic functionalities
  */
 angular.module('codeApp')
   .controller('MainCtrl', function () {
@@ -19,12 +18,14 @@ angular.module('codeApp')
     this.addHabit = addHabit;
     this.removeHabit = removeHabit;
 
+    /** This is a function to add a habit */
     function addHabit(habitName) {
       if(habitName){
         this.habits.push(habitName);
       }
     }
 
+    /** This is a function to remove a habit */
     function removeHabit(position) {
       this.habits.splice(position, 1);
     }

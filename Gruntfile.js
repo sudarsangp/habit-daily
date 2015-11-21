@@ -8,6 +8,9 @@
 // 'test/spec/**/*.js'
 
 module.exports = function (grunt) {
+  grunt.loadNpmTasks('grunt-protractor-runner');
+  grunt.loadNpmTasks('grunt-protractor-webdriver');
+  grunt.loadNpmTasks('grunt-ngdocs');
 
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
@@ -478,9 +481,15 @@ module.exports = function (grunt) {
     protractor_webdriver: {
       scenario: {
         options: {
-          path: 'node_modules/protractor/bin/'
+          path: 'node_modules/protractor/bin/',
+          command: 'webdriver-manager start'
         }
       }
+    },
+
+    // Documentation
+    ngdocs: {
+      all: ['app/scripts/**/*.js', 'test/spec/**/*.js']
     }
   });
 
@@ -512,6 +521,7 @@ module.exports = function (grunt) {
     'postcss',
     'connect:test',
     'karma',
+    'protractor_webdriver',
     'protractor'
   ]);
 
@@ -540,6 +550,7 @@ module.exports = function (grunt) {
     'build'
   ]);
 
-  grunt.loadNpmTasks('grunt-protractor-runner');
-  grunt.loadNpmTasks('grunt-protractor-webdriver');
+  grunt.registerTask('docs', [
+    'ngdocs'
+  ]);
 };
