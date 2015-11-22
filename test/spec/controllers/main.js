@@ -69,5 +69,5 @@ describe('Controller: MainCtrl', function () {
   /* User Story
   ** As a user, i should be able to edit an existing habit
   */
-
+  // not able to add unit test for contenteditable item
 });
