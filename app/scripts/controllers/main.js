@@ -15,6 +15,8 @@ angular.module('codeApp')
     ];
 
     this.habits = [];
+    this.disableAddButton = true;
+
     this.addHabit = addHabit;
     this.removeHabit = removeHabit;
 

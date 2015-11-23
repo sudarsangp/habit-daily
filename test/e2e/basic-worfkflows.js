@@ -7,6 +7,7 @@ describe('basic habit workflows', function() {
 
     it('should add single habit', function() {
       var habitList = element.all(by.repeater('habit in main.habits'));
+      element(by.buttonText('Add')).click();
       expect(habitList.count()).toBe(0);
 
       var query = element(by.model('main.habitName'));
@@ -19,6 +20,7 @@ describe('basic habit workflows', function() {
 
     it('should add multiple habits', function() {
       var habitList = element.all(by.repeater('habit in main.habits'));
+      element(by.buttonText('Add')).click();
       expect(habitList.count()).toBe(0);
 
       var query = element(by.model('main.habitName'));
