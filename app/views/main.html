@@ -9,9 +9,33 @@
   </form>
 </div>
 
+<div class="row">
+  <div class="col-xs-4">
+    <h4>Name</h4>
+  </div>
+  <div class="col-xs-2">
+    <h4>Streak</h4>
+  </div>
+  <div class="col-xs-4">
+    <h4>Week</h4>
+  </div>
+  <div class="col-xs-2">
+    <h4>Actions</h4>
+  </div>
+</div>
 <div class="row" ng-repeat="habit in main.habits">
-  <span ng-bind="habit" contenteditable class="habit-item"></span>
-  <i class="fa fa-times" ng-click="main.removeHabit($index)"></i>
+  <div class="col-xs-4">
+    <span ng-bind="habit" contenteditable class="habit-item"></span>
+  </div>
+  <div class="col-xs-2">
+    <span>0</span>
+  </div>
+  <div class="col-xs-4">
+
+  </div>
+  <div class="col-xs-2">
+    <i class="fa fa-trash-o" ng-click="main.removeHabit($index)"></i>
+  </div>
 </div>
 
 <div class="jumbotron">
