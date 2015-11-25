@@ -50,8 +50,8 @@ describe('Controller: MainCtrl', function () {
     });
 
     // good-to-have
-    it('input field should be cleared after adding habits', function() {});
-    it('able to add habits with pressing enter', function() {});
+    // it('input field should be cleared after adding habits', function() {});
+    // it('able to add habits with pressing enter', function() {});
   });
 
   /* User Story
@@ -59,10 +59,23 @@ describe('Controller: MainCtrl', function () {
   */
   describe('remove habit', function(){
     it('ensure habit at a particular index can be removed', function(){
+      spyOn(window, 'confirm').and.callFake(function () {
+        return true;
+      });
       MainCtrl.addHabit('ok');
       expect(MainCtrl.habits.length).toBe(1);
       MainCtrl.removeHabit(0);
       expect(MainCtrl.habits.length).toBe(0);
+    });
+
+    it('ensure habit is not removed when cancel option is selected', function(){
+      spyOn(window, 'confirm').and.callFake(function () {
+        return false;
+      });
+      MainCtrl.addHabit('ok');
+      expect(MainCtrl.habits.length).toBe(1);
+      MainCtrl.removeHabit(0);
+      expect(MainCtrl.habits.length).toBe(1);
     });
   });
 
@@ -70,5 +83,5 @@ describe('Controller: MainCtrl', function () {
   ** As a user, i should be able to edit an existing habit
   */
   // not able to add unit test for contenteditable item -
-  // cannot be done as contenteditable is added in html and check coverage
+  // cannot be done as contenteditable is added in html and check coverage docs for validation
 });

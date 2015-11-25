@@ -7,7 +7,7 @@
  * to handle basic functionalities
  */
 angular.module('codeApp')
-  .controller('MainCtrl', function () {
+  .controller('MainCtrl', function ($window) {
     this.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
@@ -29,6 +29,8 @@ angular.module('codeApp')
 
     /** This is a function to remove a habit */
     function removeHabit(position) {
-      this.habits.splice(position, 1);
+      if($window.confirm('This action will delete this habit')){
+        this.habits.splice(position, 1);
+      }
     }
   });
