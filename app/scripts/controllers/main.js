@@ -23,7 +23,8 @@ angular.module('codeApp')
     /** This is a function to add a habit */
     function addHabit(habitName) {
       if(habitName){
-        this.habits.push(habitName);
+        var habit = {'name': habitName, 'streak': 0};
+        this.habits.push(habit);
       }
     }
 

@@ -25,10 +25,10 @@
 </div>
 <div class="row" ng-repeat="habit in main.habits">
   <div class="col-xs-4">
-    <span ng-bind="habit" contenteditable class="habit-item"></span>
+    <span ng-bind="habit.name" contenteditable class="habit-item" ng-model="habit.name"></span>
   </div>
   <div class="col-xs-2">
-    <span>0</span>
+    <span ng-bind="habit.streak"></span>
   </div>
   <div class="col-xs-4">
 

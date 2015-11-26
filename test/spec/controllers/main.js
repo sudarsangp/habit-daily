@@ -42,9 +42,10 @@ describe('Controller: MainCtrl', function () {
     });
 
     it('ensure valid habit details pass validation', function() {
-      var testHabit = 'learn language';
+      var testHabitName = 'learn language';
+      var testHabit = {'name': testHabitName, 'streak': 0};
       expect(MainCtrl.habits.length).toBe(0);
-      MainCtrl.addHabit(testHabit);
+      MainCtrl.addHabit(testHabitName);
       expect(MainCtrl.habits.length).toBe(1);
       expect(MainCtrl.habits[0]).toEqual(testHabit);
     });
