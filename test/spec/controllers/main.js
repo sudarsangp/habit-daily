@@ -43,11 +43,12 @@ describe('Controller: MainCtrl', function () {
 
     it('ensure valid habit details pass validation', function() {
       var testHabitName = 'learn language';
-      var testHabit = {'name': testHabitName, 'streak': 0};
+      var testHabit = {'name': testHabitName, 'streak': 0, 'status': 'not started'};
       expect(MainCtrl.habits.length).toBe(0);
       MainCtrl.addHabit(testHabitName);
       expect(MainCtrl.habits.length).toBe(1);
       expect(MainCtrl.habits[0]).toEqual(testHabit);
+      expect(MainCtrl.habitName).toEqual('');
     });
 
     // good-to-have

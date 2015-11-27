@@ -23,8 +23,9 @@ angular.module('codeApp')
     /** This is a function to add a habit */
     function addHabit(habitName) {
       if(habitName){
-        var habit = {'name': habitName, 'streak': 0};
+        var habit = {'name': habitName, 'streak': 0, 'status': 'not started'};
         this.habits.push(habit);
+        this.habitName = '';
       }
     }
 

@@ -9,32 +9,34 @@
   </form>
 </div>
 
-<div class="row">
-  <div class="col-xs-4">
-    <h4>Name</h4>
+<div class="habit-list">
+  <div class="row">
+    <div class="col-xs-4">
+      <h4>Name</h4>
+    </div>
+    <div class="col-xs-2">
+      <h4>Streak</h4>
+    </div>
+    <div class="col-xs-4">
+      <h4>Status</h4>
+    </div>
+    <div class="col-xs-2">
+      <h4>Actions</h4>
+    </div>
   </div>
-  <div class="col-xs-2">
-    <h4>Streak</h4>
-  </div>
-  <div class="col-xs-4">
-    <h4>Week</h4>
-  </div>
-  <div class="col-xs-2">
-    <h4>Actions</h4>
-  </div>
-</div>
-<div class="row" ng-repeat="habit in main.habits">
-  <div class="col-xs-4">
-    <span ng-bind="habit.name" contenteditable class="habit-item" ng-model="habit.name"></span>
-  </div>
-  <div class="col-xs-2">
-    <span ng-bind="habit.streak"></span>
-  </div>
-  <div class="col-xs-4">
-
-  </div>
-  <div class="col-xs-2">
-    <i class="fa fa-trash-o" ng-click="main.removeHabit($index)"></i>
+  <div class="row" ng-repeat="habit in main.habits">
+    <div class="col-xs-4">
+      <span ng-bind="habit.name" contenteditable class="habit-item" ng-model="habit.name"></span>
+    </div>
+    <div class="col-xs-2">
+      <span ng-bind="habit.streak" ng-class="{alarming: habit.streak === 0}"></span>
+    </div>
+    <div class="col-xs-4">
+      <span ng-bind="habit.status"></span>
+    </div>
+    <div class="col-xs-2">
+      <i class="fa fa-trash-o" ng-click="main.removeHabit($index)"></i>
+    </div>
   </div>
 </div>
 
