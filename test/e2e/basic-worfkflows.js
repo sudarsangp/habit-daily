@@ -70,6 +70,19 @@ describe('basic habit workflows', function() {
         expect(habitList.count()).toBe(0);
       });
     });
+
+    it('should be able to add a habit and not allowing removing a habit', function(){
+      var query = element(by.model('main.habitName'));
+      query.sendKeys('first habit');
+      element(by.buttonText('Add')).click();
+
+      var habitList = element.all(by.repeater('habit in main.habits'));
+      element.all(by.repeater('habit in main.habits')).then(function(habits){
+        habits[0].element(by.className('glyphicon-remove')).click();
+        browser.switchTo().alert().dismiss();
+        expect(habitList.count()).toBe(1);
+      });
+    });
   });
 
   // removing multiple habits
@@ -86,16 +99,20 @@ describe('basic habit workflows', function() {
   //     element(by.buttonText('Add')).click();
 
   //     var habitList = element.all(by.repeater('habit in main.habits'));
-  //     element.all(by.repeater('habit in main.habits')).then(function(habits){
+  //     habitList.then(function(habits){
   //       // for(var i=0; i<habits.length; i++){
-  //         console.log(habits.length);
+  //         // console.log(habits[0]);
+  //         // console.log(habits[1]);
   //         habits[0].element(by.className('glyphicon-remove')).click();
   //         browser.switchTo().alert().accept();
-  //         expect(habitList.count()).toBe(1);
-  //       // }
-  //         habits[0].element(by.className('glyphicon-remove')).click();
+  //         habits[1].element(by.className('glyphicon-remove')).click();
   //         browser.switchTo().alert().accept();
   //         expect(habitList.count()).toBe(0);
+
+  //       // }
+          
+  //         // browser.switchTo().alert().accept();
+  //         // expect(habitList.count()).toBe(0);
   //     });
   //   });
   // });
