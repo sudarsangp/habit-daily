@@ -95,4 +95,14 @@ body {
     color: #ff0000;
     font-weight: bold;
   }
+
+  .streaking {
+    color: #00ff00;
+  }
+  
+  .spacing {
+    &.bottom-only {
+      margin-bottom: 10px;
+    }
+  }
 }

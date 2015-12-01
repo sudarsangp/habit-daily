@@ -11,30 +11,31 @@
 
 <div class="habit-list">
   <div class="row">
-    <div class="col-xs-4">
+    <div class="col-xs-4 text-center">
       <h4>Name</h4>
     </div>
-    <div class="col-xs-2">
+    <div class="col-xs-2 text-center">
       <h4>Streak</h4>
     </div>
-    <div class="col-xs-4">
+    <div class="col-xs-4 text-center">
       <h4>Status</h4>
     </div>
-    <div class="col-xs-2">
+    <div class="col-xs-2 text-center">
       <h4>Actions</h4>
     </div>
   </div>
-  <div class="row" ng-repeat="habit in main.habits">
-    <div class="col-xs-4">
+  <div class="row spacing bottom-only" ng-repeat="habit in main.habits">
+    <div class="col-xs-4 text-center">
       <span ng-bind="habit.name" contenteditable class="habit-item" ng-model="habit.name"></span>
     </div>
-    <div class="col-xs-2">
-      <span ng-bind="habit.streak" ng-class="{alarming: habit.streak === 0}"></span>
+    <div class="col-xs-2 text-center">
+      <span ng-bind="habit.streak" ng-class="{alarming: habit.streak === 0, streaking: habit.streak !== 0}"></span>
     </div>
-    <div class="col-xs-4">
+    <div class="col-xs-4 text-center">
       <span ng-bind="habit.status"></span>
     </div>
-    <div class="col-xs-2">
+    <div class="col-xs-2 text-center">
+      <button class="btn btn-primary" ng-click="main.beginHabit($index)" ng-show="habit.streak === 0">Start</button>
       <i class="glyphicon glyphicon-remove" ng-click="main.removeHabit($index)"></i>
     </div>
   </div>

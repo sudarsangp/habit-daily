@@ -82,8 +82,26 @@ describe('Controller: MainCtrl', function () {
   });
 
   /* User Story
+  ** As a user, i should be able to start a habit
+  */
+  describe('start habit', function(){
+    it('ensure single habit can be started', function(){
+      MainCtrl.addHabit('first habit');
+      expect(MainCtrl.habits.length).toBe(1);
+      MainCtrl.beginHabit(0);
+      expect(MainCtrl.habits[0].streak).toBe(1);
+    });
+  });
+
+  /* User Story
+  ** As a user, when i start a habit it should show the date
+  */
+  
+  /* User Story
   ** As a user, i should be able to edit an existing habit
   */
   // not able to add unit test for contenteditable item -
   // cannot be done as contenteditable is added in html and check coverage docs for validation
+
+
 });

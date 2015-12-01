@@ -19,7 +19,7 @@ angular.module('codeApp')
     
     this.addHabit = addHabit;
     this.removeHabit = removeHabit;
-
+    this.beginHabit = beginHabit;
     /** This is a function to add a habit */
     function addHabit(habitName) {
       if(habitName){
@@ -34,5 +34,9 @@ angular.module('codeApp')
       if($window.confirm('This action will delete this habit')){
         this.habits.splice(position, 1);
       }
+    }
+
+    function beginHabit(position) {
+      this.habits[position].streak += 1;
     }
   });
