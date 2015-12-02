@@ -119,7 +119,7 @@ describe('basic habit workflows', function() {
         habits[0].element(by.className('alarming')).getText().then(function(text){
           expect(text).toEqual('0');
         });
-        habits[0].element(by.className('btn-primary')).click();
+        habits[0].element(by.className('btn-success')).click();
         habits[0].element(by.className('streaking')).getText().then(function(text){
           expect(text).toEqual('1');
         });

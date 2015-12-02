@@ -43,7 +43,7 @@ describe('Controller: MainCtrl', function () {
 
     it('ensure valid habit details pass validation', function() {
       var testHabitName = 'learn language';
-      var testHabit = {'name': testHabitName, 'streak': 0, 'status': 'not started'};
+      var testHabit = {'name': testHabitName, 'streak': 0, 'status': {'created': new Date()}};
       expect(MainCtrl.habits.length).toBe(0);
       MainCtrl.addHabit(testHabitName);
       expect(MainCtrl.habits.length).toBe(1);
@@ -84,18 +84,20 @@ describe('Controller: MainCtrl', function () {
   /* User Story
   ** As a user, i should be able to start a habit
   */
+  /* User Story
+  ** As a user, when i start a habit it should show the date
+  */
   describe('start habit', function(){
     it('ensure single habit can be started', function(){
       MainCtrl.addHabit('first habit');
       expect(MainCtrl.habits.length).toBe(1);
       MainCtrl.beginHabit(0);
       expect(MainCtrl.habits[0].streak).toBe(1);
+      expect(MainCtrl.habits[0].status.started).toEqual(new Date());
     });
   });
 
-  /* User Story
-  ** As a user, when i start a habit it should show the date
-  */
+
   
   /* User Story
   ** As a user, i should be able to edit an existing habit

@@ -1,10 +1,12 @@
 <div class="row">
   <form name='habitAddForm'>
   <div class="col-xs-4">
-    <input type="text" class="form-control" ng-model="main.habitName" required/>
+  <div class="input-group">
+    <input type="text" class="form-control" ng-model="main.habitName" placeholder="enter your habit" required/>
+    <span class="input-group-btn">
+      <button class="btn btn-primary" ng-click="main.addHabit(main.habitName)" ng-disabled="habitAddForm.$invalid">Add</button>
+    </span>
   </div>
-  <div class="col-xs-2">
-    <button class="btn btn-primary" ng-click="main.addHabit(main.habitName)" ng-disabled="habitAddForm.$invalid">Add</button>
   </div>
   </form>
 </div>
@@ -32,11 +34,14 @@
       <span ng-bind="habit.streak" ng-class="{alarming: habit.streak === 0, streaking: habit.streak !== 0}"></span>
     </div>
     <div class="col-xs-4 text-center">
-      <span ng-bind="habit.status"></span>
+       <span ng-hide="habit.status.started">Created on {{ habit.status.created | amDateFormat: 'Do MMMM YYYY'}}</span>
+      <span ng-show="habit.status.started">started <span am-time-ago="habit.status.started"></span></span>
     </div>
     <div class="col-xs-2 text-center">
-      <button class="btn btn-primary" ng-click="main.beginHabit($index)" ng-show="habit.streak === 0">Start</button>
-      <i class="glyphicon glyphicon-remove" ng-click="main.removeHabit($index)"></i>
+      <div class="btn-group btn-group-sm">
+      <button class="btn btn-success" ng-click="main.beginHabit($index)" ng-show="habit.streak === 0">Start</button>
+      <button class="btn btn-danger" ng-click="main.removeHabit($index)"><i class="glyphicon glyphicon-remove"></i></button>
+      </div>
     </div>
   </div>
 </div>

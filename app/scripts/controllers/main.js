@@ -23,7 +23,7 @@ angular.module('codeApp')
     /** This is a function to add a habit */
     function addHabit(habitName) {
       if(habitName){
-        var habit = {'name': habitName, 'streak': 0, 'status': 'not started'};
+        var habit = {'name': habitName, 'streak': 0, 'status': {'created': new Date()}};
         this.habits.push(habit);
         this.habitName = '';
       }
@@ -38,5 +38,6 @@ angular.module('codeApp')
 
     function beginHabit(position) {
       this.habits[position].streak += 1;
+      this.habits[position].status.started = new Date();
     }
   });
