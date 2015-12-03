@@ -20,7 +20,7 @@
       <h4>Streak</h4>
     </div>
     <div class="col-xs-4 text-center">
-      <h4>Status</h4>
+      <h4>Time</h4>
     </div>
     <div class="col-xs-2 text-center">
       <h4>Actions</h4>
@@ -34,12 +34,14 @@
       <span ng-bind="habit.streak" ng-class="{alarming: habit.streak === 0, streaking: habit.streak !== 0}"></span>
     </div>
     <div class="col-xs-4 text-center">
-       <span ng-hide="habit.status.started">Created on {{ habit.status.created | amDateFormat: 'Do MMMM YYYY'}}</span>
-      <span ng-show="habit.status.started">started <span am-time-ago="habit.status.started"></span></span>
+       <span ng-show="habit.state === main.habitState.CREATED">Created on {{ habit.status.created | amDateFormat: 'Do MMMM YYYY'}}</span>
+      <span ng-show="habit.state === main.habitState.STARTED">started <span am-time-ago="habit.status.started"></span></span>
+      <span ng-show="habit.state === main.habitState.FINISHED">{{ habit.status.finished |  amDifference : habit.status.started : 'seconds'}} seconds</span>
     </div>
     <div class="col-xs-2 text-center">
       <div class="btn-group btn-group-sm">
-      <button class="btn btn-success" ng-click="main.beginHabit($index)" ng-show="habit.streak === 0">Start</button>
+      <button class="btn btn-success" ng-click="main.beginHabit($index)" ng-show="habit.state === main.habitState.CREATED">Start</button>
+      <button class="btn btn-primary" ng-click="main.finishHabit($index)" ng-show="habit.state === main.habitState.STARTED">Finish</button>
       <button class="btn btn-danger" ng-click="main.removeHabit($index)"><i class="glyphicon glyphicon-remove"></i></button>
       </div>
     </div>

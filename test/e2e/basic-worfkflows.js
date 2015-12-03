@@ -120,11 +120,33 @@ describe('basic habit workflows', function() {
           expect(text).toEqual('0');
         });
         habits[0].element(by.className('btn-success')).click();
+        habits[0].element(by.className('alarming')).getText().then(function(text){
+          expect(text).toEqual('0');
+        });
+        // habits[0].element(by.className('streaking')).getText().then(function(text){
+        //   expect(text).toEqual('1');
+        // });
+      });
+    });
+  });
+
+  describe('finishing habits: ', function(){
+    it('should be finish a habit after adding ', function(){
+      var query = element(by.model('main.habitName'));
+      query.sendKeys('first habit');
+      element(by.buttonText('Add')).click();
+
+      var habitList = element.all(by.repeater('habit in main.habits'));
+      habitList.then(function(habits){
+        habits[0].element(by.className('alarming')).getText().then(function(text){
+          expect(text).toEqual('0');
+        });
+        habits[0].element(by.className('btn-success')).click();
+        habits[0].element(by.className('btn-primary')).click();
         habits[0].element(by.className('streaking')).getText().then(function(text){
           expect(text).toEqual('1');
         });
       });
     });
-    
   });
 });

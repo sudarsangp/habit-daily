@@ -43,7 +43,7 @@ describe('Controller: MainCtrl', function () {
 
     it('ensure valid habit details pass validation', function() {
       var testHabitName = 'learn language';
-      var testHabit = {'name': testHabitName, 'streak': 0, 'status': {'created': new Date()}};
+      var testHabit = {'name': testHabitName, 'streak': 0, 'status': {'created': new Date()}, 'state': MainCtrl.habitState.CREATED};
       expect(MainCtrl.habits.length).toBe(0);
       MainCtrl.addHabit(testHabitName);
       expect(MainCtrl.habits.length).toBe(1);
@@ -92,13 +92,23 @@ describe('Controller: MainCtrl', function () {
       MainCtrl.addHabit('first habit');
       expect(MainCtrl.habits.length).toBe(1);
       MainCtrl.beginHabit(0);
-      expect(MainCtrl.habits[0].streak).toBe(1);
+      expect(MainCtrl.habits[0].streak).toBe(0);
       expect(MainCtrl.habits[0].status.started).toEqual(new Date());
     });
   });
 
-
-  
+   /* User Story
+  ** As a user, i should be able to finish a habit
+  */
+  describe('finish habit', function(){
+    it('ensure single habit can be finished', function(){
+      MainCtrl.addHabit('first habit');
+      expect(MainCtrl.habits.length).toBe(1);
+      MainCtrl.finishHabit(0);
+      expect(MainCtrl.habits[0].streak).toBe(1);
+      expect(MainCtrl.habits[0].status.finished).toEqual(new Date());
+    });
+  });
   /* User Story
   ** As a user, i should be able to edit an existing habit
   */

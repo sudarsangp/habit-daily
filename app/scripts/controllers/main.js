@@ -14,16 +14,29 @@ angular.module('codeApp')
       'Karma'
     ];
 
+    this.habitState = Object.freeze({
+      CREATED: 0,
+      STARTED: 1,
+      FINISHED: 2
+    });
+
     this.habits = [];
     this.disableAddButton = true;
     
     this.addHabit = addHabit;
     this.removeHabit = removeHabit;
     this.beginHabit = beginHabit;
+    this.finishHabit = finishHabit;
+
     /** This is a function to add a habit */
     function addHabit(habitName) {
       if(habitName){
-        var habit = {'name': habitName, 'streak': 0, 'status': {'created': new Date()}};
+        var habit = {
+          'name': habitName,
+          'streak': 0,
+          'status': {'created': new Date()},
+          'state': this.habitState.CREATED
+        };
         this.habits.push(habit);
         this.habitName = '';
       }
@@ -37,7 +50,13 @@ angular.module('codeApp')
     }
 
     function beginHabit(position) {
-      this.habits[position].streak += 1;
       this.habits[position].status.started = new Date();
+      this.habits[position].state = this.habitState.STARTED;
+    }
+
+    function finishHabit(position) {
+      this.habits[position].streak += 1;
+      this.habits[position].state = this.habitState.FINISHED;
+      this.habits[position].status.finished = new Date();
     }
   });
