@@ -7,12 +7,14 @@
  * to handle basic functionalities
  */
 angular.module('codeApp')
-  .controller('MainCtrl', function ($window) {
+  .controller('MainCtrl', function ($window, TimeService) {
     this.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
       'Karma'
     ];
+
+
 
     this.habitState = Object.freeze({
       CREATED: 0,
@@ -58,5 +60,9 @@ angular.module('codeApp')
       this.habits[position].streak += 1;
       this.habits[position].state = this.habitState.FINISHED;
       this.habits[position].status.finished = new Date();
+      this.habits[position].status.timeDifference = TimeService.formatTime(TimeService.calculateTimeDifference(
+        this.habits[position].status.started,
+        this.habits[position].status.finished));
     }
+
   });

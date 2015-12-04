@@ -36,7 +36,7 @@
     <div class="col-xs-4 text-center">
        <span ng-show="habit.state === main.habitState.CREATED">Created on {{ habit.status.created | amDateFormat: 'Do MMMM YYYY'}}</span>
       <span ng-show="habit.state === main.habitState.STARTED">started <span am-time-ago="habit.status.started"></span></span>
-      <span ng-show="habit.state === main.habitState.FINISHED">{{ habit.status.finished |  amDifference : habit.status.started : 'seconds'}} seconds</span>
+      <span ng-show="habit.state === main.habitState.FINISHED">{{ habit.status.timeDifference}}</span>
     </div>
     <div class="col-xs-2 text-center">
       <div class="btn-group btn-group-sm">
