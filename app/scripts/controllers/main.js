@@ -24,7 +24,8 @@ angular.module('codeApp')
 
     this.habits = [];
     this.disableAddButton = true;
-    
+    this.today = moment().local().format('dddd[,] Do MMMM YYYY');
+
     this.addHabit = addHabit;
     this.removeHabit = removeHabit;
     this.beginHabit = beginHabit;
@@ -37,7 +38,8 @@ angular.module('codeApp')
           'name': habitName,
           'streak': 0,
           'status': {'created': new Date()},
-          'state': this.habitState.CREATED
+          'state': this.habitState.CREATED,
+          'lastweek': [0, 0, 0, 0, 0, 0, 0]
         };
         this.habits.push(habit);
         this.habitName = '';
@@ -63,6 +65,7 @@ angular.module('codeApp')
       this.habits[position].status.timeDifference = TimeService.formatTime(TimeService.calculateTimeDifference(
         this.habits[position].status.started,
         this.habits[position].status.finished));
+      this.habits[position].lastweek[this.habits[position].lastweek.length - 1] = 1;
     }
 
   });

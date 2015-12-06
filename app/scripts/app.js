@@ -10,5 +10,6 @@
  */
 angular
   .module('codeApp', [
-  	'angularMoment'
+  	'angularMoment',
+  	'ui.bootstrap'
   ]);

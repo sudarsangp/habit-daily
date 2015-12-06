@@ -91,18 +91,35 @@ body {
 }
 
 .habit-list {
+  font-size: 14px !important;
+
   .alarming {
     color: #ff0000;
     font-weight: bold;
   }
 
-  .streaking {
-    color: #00ff00;
+  .hand-writing {
+    font-family: cursive
   }
   
   .spacing {
     &.bottom-only {
       margin-bottom: 10px;
     }
+    &.remove-left {
+      margin-left: 0px;
+    }
+    &.remove-right {
+      margin-right: 0px;
+    }
+  }
+
+  .streaking {
+    color: #00ff00;
+  }
+
+  .vertical-center-align {
+    display: flex;
+    align-items: center;
   }
 }

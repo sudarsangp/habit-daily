@@ -9,6 +9,9 @@
   </div>
   </div>
   </form>
+  <div class="col-xs-offset-3 col-xs-5">
+    Today: <span ng-bind="main.today"></span>
+  </div>
 </div>
 
 <div class="habit-list">
@@ -26,9 +29,13 @@
       <h4>Actions</h4>
     </div>
   </div>
-  <div class="row spacing bottom-only" ng-repeat="habit in main.habits">
+  <div ng-repeat="habit in main.habits" class="spacing bottom-only">
+  <uib-accordion>
+  <uib-accordion-group is-open="true">
+  <uib-accordion-heading>
+  <div class="row vertical-center-align remove-left remove-right">
     <div class="col-xs-4 text-center">
-      <span ng-bind="habit.name" contenteditable class="habit-item" ng-model="habit.name"></span>
+      <span ng-bind="habit.name" contenteditable class="habit-item hand-writing" ng-model="habit.name"></span>
     </div>
     <div class="col-xs-2 text-center">
       <span ng-bind="habit.streak" ng-class="{alarming: habit.streak === 0, streaking: habit.streak !== 0}"></span>
@@ -45,6 +52,20 @@
       <button class="btn btn-danger" ng-click="main.removeHabit($index)"><i class="glyphicon glyphicon-remove"></i></button>
       </div>
     </div>
+  </div>
+  </uib-accordion-heading>
+  <div class="row">
+    <div class="col-xs-4">
+      <span>Streak Past Week [Sun - Sat]</span>
+    </div>
+    <div class="col-xs-1" ng-repeat="day in habit.lastweek track by $index">
+      <span class="glyphicon" ng-class="{alarming: !day, 'glyphicon-minus': !day, streaking: day, 'glyphicon-ok': day}"></span>
+    </div>
+  </div>
+  
+  </uib-accordion-group>
+  </div>
+  </uib-accordion>
   </div>
 </div>
 

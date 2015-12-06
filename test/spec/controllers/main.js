@@ -43,7 +43,13 @@ describe('Controller: MainCtrl', function () {
 
     it('ensure valid habit details pass validation', function() {
       var testHabitName = 'learn language';
-      var testHabit = {'name': testHabitName, 'streak': 0, 'status': {'created': new Date()}, 'state': MainCtrl.habitState.CREATED};
+      var testHabit = {
+        'name': testHabitName, 
+        'streak': 0, 
+        'status': {'created': new Date()}, 
+        'state': MainCtrl.habitState.CREATED,
+        'lastweek': [0, 0, 0, 0, 0, 0, 0]
+      };
       expect(MainCtrl.habits.length).toBe(0);
       MainCtrl.addHabit(testHabitName);
       expect(MainCtrl.habits.length).toBe(1);
@@ -128,6 +134,7 @@ describe('Controller: MainCtrl', function () {
       expect(MainCtrl.habits.length).toBe(1);
       MainCtrl.finishHabit(0);
       expect(MainCtrl.habits[0].streak).toBe(1);
+      // expect(MainCtrl.habits[0].lastweek[6]).toBe(1);
       // expect(MainCtrl.habits[0].status.finished).toEqual(new Date());
     });
   });
