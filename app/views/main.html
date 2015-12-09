@@ -38,7 +38,7 @@
       <span ng-bind="habit.name" contenteditable class="habit-item hand-writing" ng-model="habit.name"></span>
     </div>
     <div class="col-xs-2 text-center">
-      <span ng-bind="habit.streak" ng-class="{alarming: habit.streak === 0, streaking: habit.streak !== 0}"></span>
+      <span id="streak" ng-bind="habit.streak" ng-class="{alarming: habit.streak === 0, streaking: habit.streak !== 0}"></span>
     </div>
     <div class="col-xs-4 text-center">
        <span ng-show="habit.state === main.habitState.CREATED">Created on {{ habit.status.created | amDateFormat: 'Do MMMM YYYY'}}</span>

@@ -3,6 +3,10 @@ describe('basic habit workflows', function() {
       browser.get('index.html');
   });
   
+  // beforeEach(function() {
+  //   localStorage.clear();
+  // });
+
   describe('adding habits: ', function(){
     it('should add single habit', function() {
       var habitList = element.all(by.repeater('habit in main.habits'));
@@ -116,11 +120,12 @@ describe('basic habit workflows', function() {
 
       var habitList = element.all(by.repeater('habit in main.habits'));
       habitList.then(function(habits){
-        habits[0].element(by.className('alarming')).getText().then(function(text){
+        console.log()
+        habits[0].element(by.id('streak')).getText().then(function(text){
           expect(text).toEqual('0');
         });
         habits[0].element(by.className('btn-success')).click();
-        habits[0].element(by.className('alarming')).getText().then(function(text){
+        habits[0].element(by.id('streak')).getText().then(function(text){
           expect(text).toEqual('0');
         });
         // habits[0].element(by.className('streaking')).getText().then(function(text){
@@ -138,7 +143,7 @@ describe('basic habit workflows', function() {
 
       var habitList = element.all(by.repeater('habit in main.habits'));
       habitList.then(function(habits){
-        habits[0].element(by.className('alarming')).getText().then(function(text){
+        habits[0].element(by.id('streak')).getText().then(function(text){
           expect(text).toEqual('0');
         });
         habits[0].element(by.className('btn-success')).click();
