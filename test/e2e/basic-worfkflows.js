@@ -3,9 +3,9 @@ describe('basic habit workflows', function() {
       browser.get('index.html');
   });
   
-  // beforeEach(function() {
-  //   localStorage.clear();
-  // });
+  afterEach(function() {
+    browser.executeScript('window.localStorage.clear();');
+  });
 
   describe('adding habits: ', function(){
     it('should add single habit', function() {
