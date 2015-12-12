@@ -4,6 +4,7 @@ angular.module('codeApp')
 	.service('TimeService', function(){
 		this.calculateTimeDifference = calculateTimeDifference;
 		this.formatTime = formatTime;
+    this.updateHabitDaily = updateHabitDaily;
 
 		var timeFormatStrings = Object.freeze({
       HOUR: 'hour',
@@ -64,5 +65,17 @@ angular.module('codeApp')
         result = time.format('SSS [' + millisecondsFormat + ']');
       }
       return result;
+    }
+
+    function updateHabitDaily(habits, today) {
+      for(var i=0; i<habits.length; i++){
+        var index = habits[i].status.length - 1;
+        if(moment(habits[i].status[index].created).date() !== moment(today).date()){
+          habits[i].current.push(0);
+          habits[i].state.push(0);
+          habits[i].status.push(habits[i].status[index].created);
+        }
+      }
+      return habits;
     }
 	});

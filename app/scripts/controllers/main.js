@@ -20,7 +20,7 @@ angular.module('codeApp')
       FINISHED: 2
     });
 
-    this.habits = LocalStorageService.getHabits();
+    this.habits = initializeHabitsToday();
     this.disableAddButton = true;
     this.today = moment().local().format('dddd[,] Do MMMM YYYY');
 
@@ -29,27 +29,25 @@ angular.module('codeApp')
     this.beginHabit = beginHabit;
     this.finishHabit = finishHabit;
 
-    /** This is a function to add a habit */
     function addHabit(habitName) {
       if(habitName){
         var habit = {
           'name': habitName,
           'streak': 0,
-          'status': {'created': new Date()},
-          'state': this.habitState.CREATED,
-          'lastweek': [0, 0, 0, 0, 0, 0, 0]
+          'status': [{'created': new Date()}],
+          'state': [this.habitState.CREATED],
+          'current': [0]
         };
-        this.habits.push(habit);
         this.habitName = '';
         LocalStorageService.addHabit(habit);
+        this.habits = LocalStorageService.getHabits();
       }
     }
 
-    /** This is a function to remove a habit */
     function removeHabit(position) {
       if($window.confirm('This action will delete this habit')){
-        this.habits.splice(position, 1);
         LocalStorageService.removeHabit(position);
+        this.habits = LocalStorageService.getHabits();
       }
     }
 
@@ -66,8 +64,18 @@ angular.module('codeApp')
       this.habits[position].status.timeDifference = TimeService.formatTime(TimeService.calculateTimeDifference(
         this.habits[position].status.started,
         this.habits[position].status.finished));
-      this.habits[position].lastweek[this.habits[position].lastweek.length - 1] = 1;
+      this.habits[position].current = 1;
       LocalStorageService.modifyHabit(position, this.habits[position]);
     }
 
+    function initializeHabitsToday(){
+      var habits = LocalStorageService.getAllHabitsData();
+      var today = moment().local();
+      if(habits.length > 0){
+        habits = TimeService.updateHabitDaily(habits, today);
+      }
+      LocalStorageService.setAllHabitsData(habits);
+      var todayHabits = LocalStorageService.getHabits();
+      return todayHabits;
+    }
   });

@@ -16,13 +16,16 @@
 
 <div class="habit-list">
   <div class="row">
+    <div class="col-xs-1 text-center">
+      <h4>Today</h4>
+    </div>
     <div class="col-xs-4 text-center">
       <h4>Name</h4>
     </div>
     <div class="col-xs-2 text-center">
       <h4>Streak</h4>
     </div>
-    <div class="col-xs-4 text-center">
+    <div class="col-xs-3 text-center">
       <h4>Time</h4>
     </div>
     <div class="col-xs-2 text-center">
@@ -34,13 +37,16 @@
   <uib-accordion-group is-open="true">
   <uib-accordion-heading>
   <div class="row vertical-center-align remove-left remove-right">
+    <div class="col-xs-1 text-center">
+      <span class="glyphicon" ng-class="{alarming: !habit.current, 'glyphicon-minus': !habit.current, streaking: habit.current, 'glyphicon-ok': habit.current}"></span>
+    </div>
     <div class="col-xs-4 text-center">
       <span ng-bind="habit.name" contenteditable class="habit-item hand-writing" ng-model="habit.name"></span>
     </div>
     <div class="col-xs-2 text-center">
       <span id="streak" ng-bind="habit.streak" ng-class="{alarming: habit.streak === 0, streaking: habit.streak !== 0}"></span>
     </div>
-    <div class="col-xs-4 text-center">
+    <div class="col-xs-3 text-center">
        <span ng-show="habit.state === main.habitState.CREATED">Created on {{ habit.status.created | amDateFormat: 'Do MMMM YYYY'}}</span>
       <span ng-show="habit.state === main.habitState.STARTED">started <span am-time-ago="habit.status.started"></span></span>
       <span ng-show="habit.state === main.habitState.FINISHED">{{ habit.status.timeDifference}}</span>
@@ -55,11 +61,11 @@
   </div>
   </uib-accordion-heading>
   <div class="row">
-    <div class="col-xs-4">
-      <span>Streak Past Week [Sun - Sat]</span>
+    <div class="col-xs-4 text-center">
+      <span>Streak Past Week </span>
     </div>
-    <div class="col-xs-1" ng-repeat="day in habit.lastweek track by $index">
-      <span class="glyphicon" ng-class="{alarming: !day, 'glyphicon-minus': !day, streaking: day, 'glyphicon-ok': day}"></span>
+    <div class="col-xs-offset-7 col-xs-1">
+      <span class="glyphicon" ng-class="{alarming: !habit.current, 'glyphicon-minus': !habit.current, streaking: habit.current, 'glyphicon-ok': habit.current}"></span>
     </div>
   </div>
   

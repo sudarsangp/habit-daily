@@ -69,7 +69,7 @@ describe('Controller: MainCtrl', function () {
         'streak': 0, 
         'status': {'created': new Date()}, 
         'state': MainCtrl.habitState.CREATED,
-        'lastweek': [0, 0, 0, 0, 0, 0, 0]
+        'current': [0, 0, 0, 0, 0, 0, 0]
       };
       expect(MainCtrl.habits.length).toBe(0);
       MainCtrl.addHabit(testHabitName);
@@ -155,7 +155,7 @@ describe('Controller: MainCtrl', function () {
       expect(MainCtrl.habits.length).toBe(1);
       MainCtrl.finishHabit(0);
       expect(MainCtrl.habits[0].streak).toBe(1);
-      // expect(MainCtrl.habits[0].lastweek[6]).toBe(1);
+      // expect(MainCtrl.habits[0].current[6]).toBe(1);
       // expect(MainCtrl.habits[0].status.finished).toEqual(new Date());
     });
   });
