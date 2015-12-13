@@ -148,7 +148,7 @@ describe('basic habit workflows', function() {
         });
         habits[0].element(by.className('btn-success')).click();
         habits[0].element(by.className('btn-primary')).click();
-        habits[0].element(by.className('streaking')).getText().then(function(text){
+        habits[0].element(by.id('streak')).getText().then(function(text){
           expect(text).toEqual('1');
         });
       });
