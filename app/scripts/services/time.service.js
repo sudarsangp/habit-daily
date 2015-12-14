@@ -73,7 +73,7 @@ angular.module('codeApp')
         if(moment(habits[i].status[index].created).date() !== moment(today).date()){
           habits[i].current.push(0);
           habits[i].state.push(0);
-          habits[i].status.push(habits[i].status[index].created);
+          habits[i].status.push({'created': habits[i].status[index].created});
         }
       }
       return habits;
