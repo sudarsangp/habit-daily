@@ -23,7 +23,6 @@ angular.module('codeApp')
     this.habits = initializeHabitsToday();
     this.disableAddButton = true;
     this.today = moment().local().format('dddd[,] Do MMMM YYYY');
-
     this.addHabit = addHabit;
     this.removeHabit = removeHabit;
     this.beginHabit = beginHabit;
@@ -40,14 +39,14 @@ angular.module('codeApp')
         };
         this.habitName = '';
         LocalStorageService.addHabit(habit);
-        this.habits = LocalStorageService.getHabits();
+        this.habits = addLastWeekStreak(LocalStorageService.getHabits());
       }
     }
 
     function removeHabit(position) {
       if($window.confirm('This action will delete this habit')){
         LocalStorageService.removeHabit(position);
-        this.habits = LocalStorageService.getHabits();
+        this.habits = addLastWeekStreak(LocalStorageService.getHabits());
       }
     }
 
@@ -68,7 +67,7 @@ angular.module('codeApp')
       LocalStorageService.modifyHabit(position, this.habits[position]);
     }
 
-    function initializeHabitsToday(){
+    function initializeHabitsToday() {
       var habits = LocalStorageService.getAllHabitsData() || [];
       var today = moment().local();
       if(habits.length > 0){
@@ -76,6 +75,25 @@ angular.module('codeApp')
       }
       LocalStorageService.setAllHabitsData(habits);
       var todayHabits = LocalStorageService.getHabits();
+      todayHabits = addLastWeekStreak(todayHabits);
       return todayHabits;
+    }
+
+    function lastWeekHabitStreak(habit) {
+      var habits = LocalStorageService.getAllHabitsData() || [];
+      var streaksHabit = [];
+      for(var i=0; i<habits.length; i++){
+        if(habits[i].name === habit.name){
+          streaksHabit = habits[i].current.slice(Math.max(habits[i].current.length - 7, 0));
+        }
+      }
+      return streaksHabit;
+    }
+
+    function addLastWeekStreak(habits){
+      for(var i=0; i<habits.length; i++){
+        habits[i].lastWeekStreak = lastWeekHabitStreak(habits[i]);
+      }
+      return habits;
     }
   });

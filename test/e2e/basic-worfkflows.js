@@ -154,4 +154,29 @@ describe('basic habit workflows', function() {
       });
     });
   });
+
+  // need to updagrade to jasmine 2.0 to use mockDate, but not able to
+  // describe('starting habit on a consecutive day', function(){
+
+  //   it('should be able to start a habit on a second day', function(){
+
+  //     // jasmine.clock().install();
+  //     // var baseDate = new Date(2015, 12, 13);
+  //     // jasmine.clock().mockDate(baseDate);
+
+  //     // var query = element(by.model('main.habitName'));
+  //     // query.sendKeys('first habit');
+  //     // element(by.buttonText('Add')).click();
+  //     // jasmine.clock().uninstall();
+  //   });
+  // });
+
+  /*
+      if (jasmine.version) { //the case for version 2.0.0
+       console.log('jasmine-version:' + jasmine.version);
+      }
+      else { //the case for version 1.3
+         console.log('jasmine-version:' + jasmine.getEnv().versionString());
+      }
+    */
 });

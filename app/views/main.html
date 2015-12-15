@@ -64,8 +64,8 @@
     <div class="col-xs-4 text-center">
       <span>Streak Past Week </span>
     </div>
-    <div class="col-xs-offset-7 col-xs-1">
-      <span class="glyphicon" ng-class="{alarming: !habit.current, 'glyphicon-minus': !habit.current, streaking: habit.current, 'glyphicon-ok': habit.current}"></span>
+    <div class="col-xs-1" ng-repeat="streakHabit in habit.lastWeekStreak track by $index">
+      <span class="glyphicon" ng-class="{alarming: !streakHabit, 'glyphicon-minus': !streakHabit, streaking: streakHabit, 'glyphicon-ok': streakHabit}"></span>
     </div>
   </div>
   

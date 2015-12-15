@@ -71,9 +71,11 @@ angular.module('codeApp')
       for(var i=0; i<habits.length; i++){
         var index = habits[i].status.length - 1;
         if(moment(habits[i].status[index].created).date() !== moment(today).date()){
-          habits[i].current.push(0);
-          habits[i].state.push(0);
-          habits[i].status.push({'created': habits[i].status[index].created});
+          if(habits[i].status.length < calculateTimeDifference(habits[i].status[index].created, today).date()){
+            habits[i].current.push(0);
+            habits[i].state.push(0);
+            habits[i].status.push({'created': habits[i].status[index].created});
+          }
         }
       }
       return habits;
