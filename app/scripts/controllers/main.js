@@ -39,7 +39,7 @@ angular.module('codeApp')
         };
         this.habitName = '';
         LocalStorageService.addHabit(habit);
-        this.habits = addLastWeekStreak(LocalStorageService.getHabits());
+        this.habits = convertToLocalTime(addLastWeekStreak(LocalStorageService.getHabits()));
       }
     }
 
@@ -75,7 +75,7 @@ angular.module('codeApp')
       }
       LocalStorageService.setAllHabitsData(habits);
       var todayHabits = LocalStorageService.getHabits();
-      todayHabits = addLastWeekStreak(todayHabits);
+      todayHabits = convertToLocalTime(addLastWeekStreak(todayHabits));
       return todayHabits;
     }
 
@@ -93,6 +93,15 @@ angular.module('codeApp')
     function addLastWeekStreak(habits){
       for(var i=0; i<habits.length; i++){
         habits[i].lastWeekStreak = lastWeekHabitStreak(habits[i]);
+      }
+      return habits;
+    }
+
+    function convertToLocalTime(habits){
+      for(var i=0; i<habits.length; i++){
+        if(typeof habits[i].status.created !== 'undefined'){
+          habits[i].status.created = moment(habits[i].status.created).local();
+        }
       }
       return habits;
     }
