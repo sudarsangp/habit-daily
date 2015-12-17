@@ -39,7 +39,7 @@ angular.module('codeApp')
         };
         this.habitName = '';
         LocalStorageService.addHabit(habit);
-        this.habits = convertToLocalTime(addLastWeekStreak(LocalStorageService.getHabits()));
+        this.habits = addLastWeekStreak(LocalStorageService.getHabits());
       }
     }
 
@@ -75,7 +75,7 @@ angular.module('codeApp')
       }
       LocalStorageService.setAllHabitsData(habits);
       var todayHabits = LocalStorageService.getHabits();
-      todayHabits = convertToLocalTime(addLastWeekStreak(todayHabits));
+      todayHabits = addLastWeekStreak(todayHabits);
       return todayHabits;
     }
 
@@ -97,12 +97,23 @@ angular.module('codeApp')
       return habits;
     }
 
-    function convertToLocalTime(habits){
-      for(var i=0; i<habits.length; i++){
-        if(typeof habits[i].status.created !== 'undefined'){
-          habits[i].status.created = moment(habits[i].status.created).local();
-        }
-      }
-      return habits;
-    }
+    // function convertToLocalTime(habits){
+    //   for(var i=0; i<habits.length; i++){
+    //     if(typeof habits[i].status.created !== 'undefined'){
+    //       habits[i].status.created = moment(habits[i].status.created).local();
+    //     }
+    //   }
+    //   return habits;
+    // }
+
+    // function convertToLocalTimeAll(allHabitsData){
+    //   for(var i=0; i<allHabitsData.length; i++){
+    //     for(var j=0; j<allHabitsData[i].status[j].length; j++){
+    //       if(typeof allHabitsData[i].status[j].created !== 'undefined'){
+    //         allHabitsData[i].status[j].created = moment(allHabitsData[i].status[j].created).local();
+    //       }
+    //     }
+    //   }
+    //   return allHabitsData;
+    // }
   });
