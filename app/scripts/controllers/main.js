@@ -65,6 +65,7 @@ angular.module('codeApp')
         this.habits[position].status.finished));
       this.habits[position].current = 1;
       LocalStorageService.modifyHabit(position, this.habits[position]);
+      this.habits[position].lastWeekStreak = lastWeekHabitStreak(this.habits[position]);
     }
 
     function initializeHabitsToday() {
