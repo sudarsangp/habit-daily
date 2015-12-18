@@ -12,7 +12,6 @@ angular.module('codeApp')
 		var habitsKey = 'dailyhabits';
 
 		function addHabit(habit){
-			localStorage.setItem('check1', JSON.stringify(habit.status[0].created));
 			var currentHabitList = localStorageService.get(habitsKey) || [];
 			currentHabitList.push(habit);
 			localStorageService.set(habitsKey, currentHabitList);

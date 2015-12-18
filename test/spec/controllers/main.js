@@ -12,7 +12,7 @@ describe('Controller: MainCtrl', function () {
         var habitsKey = 'dailyhabits';
         var storage = [];
         var get = jasmine.createSpy('get').and.callFake(function(key){
-          // console.log(storage[key]);
+          console.log(storage[key]);
           return storage[key];
         });
         var set = jasmine.createSpy('set').and.callFake(function(key, habitList){
@@ -42,6 +42,16 @@ describe('Controller: MainCtrl', function () {
     expect(MainCtrl.awesomeThings.length).toBe(3);
   });
 
+  describe('use preloaded habits', function(){
+    beforeEach(function(){
+       MainCtrl.addHabit('first habit');
+    });
+
+    it('initalize habits should not be empty', function(){
+      expect(MainCtrl.habits.length).toBe(1);
+    });
+  });
+
   /* User Story
   ** As a user i should be able to add a habit
   */
@@ -67,9 +77,9 @@ describe('Controller: MainCtrl', function () {
       var testHabit = {
         'name': testHabitName, 
         'streak': 0, 
-        'status': {'created': new Date()}, 
-        'state': MainCtrl.habitState.CREATED,
-        'current': [0, 0, 0, 0, 0, 0, 0]
+        'status': [{'created': new Date()}], 
+        'state': [MainCtrl.habitState.CREATED],
+        'current': [0]
       };
       expect(MainCtrl.habits.length).toBe(0);
       MainCtrl.addHabit(testHabitName);

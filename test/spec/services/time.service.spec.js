@@ -80,4 +80,47 @@ describe('Service: TimeService', function(){
 			});
 		});
 	});
+
+	describe('update habits daily', function(){
+		it('should not be able to update habit on habit created date', function(){
+			var testHabits = [{
+        'name': 'habitName',
+        'streak': 0,
+        'status': [{'created': new Date()}],
+        'state': [0],
+        'current': [0]
+      }];
+      var today = new Date();
+      var habitsResult = TimeService.updateHabitDaily(testHabits, today);
+      expect(habitsResult[0].current.length).toBe(1);
+		});
+
+		it('should be able to update habit on consecutive date', function(){
+			var testHabits = [{
+        'name': 'habitName',
+        'streak': 0,
+        'status': [{'created': new Date(2015, 10, 27)}],
+        'state': [0],
+        'current': [0]
+      }];
+      var today = new Date(2015, 10, 28);
+      var habitsResult = TimeService.updateHabitDaily(testHabits, today);
+      expect(habitsResult[0].current.length).toBe(2);
+		});
+
+		it('should not be able to update habit on same day more than once', function(){
+			var testHabits = [{
+        'name': 'habitName',
+        'streak': 0,
+        'status': [{'created': new Date(2015, 10, 27)}],
+        'state': [0],
+        'current': [0]
+      }];
+      var today = new Date(2015, 10, 28);
+      var habitsResult = TimeService.updateHabitDaily(testHabits, today);
+      expect(habitsResult[0].current.length).toBe(2);
+      habitsResult = TimeService.updateHabitDaily(testHabits, today);
+      expect(habitsResult[0].current.length).toBe(2);
+		});
+	});
 });
