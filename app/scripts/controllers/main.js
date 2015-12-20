@@ -8,25 +8,31 @@
  */
 angular.module('codeApp')
   .controller('MainCtrl', function ($window, TimeService, LocalStorageService) {
-    this.awesomeThings = [
+    var habitApp = this;
+
+    habitApp.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
       'Karma'
     ];
 
-    this.habitState = Object.freeze({
+    habitApp.habitState = Object.freeze({
       CREATED: 0,
       STARTED: 1,
       FINISHED: 2
     });
 
-    this.habits = initializeHabitsToday();
-    this.disableAddButton = true;
-    this.today = moment().local().format('dddd[,] Do MMMM YYYY');
-    this.addHabit = addHabit;
-    this.removeHabit = removeHabit;
-    this.beginHabit = beginHabit;
-    this.finishHabit = finishHabit;
+    habitApp.habits = initializeHabitsToday();
+    habitApp.disableAddButton = true;
+    habitApp.today = moment().local().format('dddd[,] Do MMMM YYYY');
+    habitApp.addHabit = addHabit;
+    habitApp.removeHabit = removeHabit;
+    habitApp.beginHabit = beginHabit;
+    habitApp.finishHabit = finishHabit;
+
+    habitApp.toolTipTodayText = toolTipTodayText;
+    habitApp.toolTipStreakText = toolTipStreakText;
+    habitApp.toolTipLastWeekText = toolTipLastWeekText;
 
     function addHabit(habitName) {
       if(habitName){
@@ -34,38 +40,38 @@ angular.module('codeApp')
           'name': habitName,
           'streak': 0,
           'status': [{'created': new Date()}],
-          'state': [this.habitState.CREATED],
+          'state': [habitApp.habitState.CREATED],
           'current': [0]
         };
-        this.habitName = '';
+        habitApp.habitName = '';
         LocalStorageService.addHabit(habit);
-        this.habits = addLastWeekStreak(LocalStorageService.getHabits());
+        habitApp.habits = addLastWeekStreak(LocalStorageService.getHabits());
       }
     }
 
     function removeHabit(position) {
-      if($window.confirm('This action will delete this habit')){
+      if($window.confirm('habitApp action will delete habitApp habit')){
         LocalStorageService.removeHabit(position);
-        this.habits = addLastWeekStreak(LocalStorageService.getHabits());
+        habitApp.habits = addLastWeekStreak(LocalStorageService.getHabits());
       }
     }
 
     function beginHabit(position) {
-      this.habits[position].status.started = new Date();
-      this.habits[position].state = this.habitState.STARTED;
-      LocalStorageService.modifyHabit(position, this.habits[position]);
+      habitApp.habits[position].status.started = new Date();
+      habitApp.habits[position].state = habitApp.habitState.STARTED;
+      LocalStorageService.modifyHabit(position, habitApp.habits[position]);
     }
 
     function finishHabit(position) {
-      this.habits[position].streak += 1;
-      this.habits[position].state = this.habitState.FINISHED;
-      this.habits[position].status.finished = new Date();
-      this.habits[position].status.timeDifference = TimeService.formatTime(TimeService.calculateTimeDifference(
-        this.habits[position].status.started,
-        this.habits[position].status.finished));
-      this.habits[position].current = 1;
-      LocalStorageService.modifyHabit(position, this.habits[position]);
-      this.habits[position].lastWeekStreak = lastWeekHabitStreak(this.habits[position]);
+      habitApp.habits[position].streak += 1;
+      habitApp.habits[position].state = habitApp.habitState.FINISHED;
+      habitApp.habits[position].status.finished = new Date();
+      habitApp.habits[position].status.timeDifference = TimeService.formatTime(TimeService.calculateTimeDifference(
+        habitApp.habits[position].status.started,
+        habitApp.habits[position].status.finished));
+      habitApp.habits[position].current = 1;
+      LocalStorageService.modifyHabit(position, habitApp.habits[position]);
+      habitApp.habits[position].lastWeekStreak = lastWeekHabitStreak(habitApp.habits[position]);
     }
 
     function initializeHabitsToday() {
@@ -98,23 +104,43 @@ angular.module('codeApp')
       return habits;
     }
 
-    // function convertToLocalTime(habits){
-    //   for(var i=0; i<habits.length; i++){
-    //     if(typeof habits[i].status.created !== 'undefined'){
-    //       habits[i].status.created = moment(habits[i].status.created).local();
-    //     }
-    //   }
-    //   return habits;
-    // }
+    function toolTipTodayText(habit) {
+      var toolTipString = '';
+      if(habit.current > 0){
+        toolTipString = 'great job! you have completed your habit today :)';
+      } else {
+        toolTipString = 'oops.. you have not started your habit today';
+      }
+      return toolTipString;
+    }
 
-    // function convertToLocalTimeAll(allHabitsData){
-    //   for(var i=0; i<allHabitsData.length; i++){
-    //     for(var j=0; j<allHabitsData[i].status[j].length; j++){
-    //       if(typeof allHabitsData[i].status[j].created !== 'undefined'){
-    //         allHabitsData[i].status[j].created = moment(allHabitsData[i].status[j].created).local();
-    //       }
-    //     }
-    //   }
-    //   return allHabitsData;
-    // }
+    function toolTipStreakText(habit) {
+      var toolTipString = '';
+      if(habit.streak > 1){
+        toolTipString = 'congrats on your ' + habit.streak + ' days streak!';
+      }
+      else if(habit.streak === 1){
+        toolTipString = 'good start for your habit streak';
+      }
+      else {
+        toolTipString = 'oh.. you have not started with \"' + habit.name + '\" habit';
+      }
+      return toolTipString;
+    }
+
+    function toolTipLastWeekText(streak, lastWeekStreakLength, index) {
+      var toolTipString = '';
+      if(streak > 0){
+        if(lastWeekStreakLength -1 === index){
+          toolTipString = 'awesome! you have finished habit today';
+        } else{
+          toolTipString = 'awesome! you had finished habit';
+        }
+      } else if(lastWeekStreakLength -1 === index){
+        toolTipString = 'you have a chance to do your habit';
+      } else {
+        toolTipString = 'oops.. you had missed habit';
+      }
+      return toolTipString;
+    }
   });
