@@ -69,12 +69,12 @@ angular.module('codeApp')
 
     function updateHabitDaily(habits, today) {
       for(var i=0; i<habits.length; i++){
-        var index = habits[i].status.length - 1;
-        if(moment(habits[i].status[index].created).date() !== moment(today).date()){
-          if(habits[i].status.length <= (moment(today).date() - moment(habits[i].status[index].created).date())) {
+        // var index = habits[i].status.length - 1;
+        if(moment(habits[i].created).date() !== moment(today).date()){
+          if(habits[i].status.length <= (moment(today).date() - moment(habits[i].created).date())) {
             habits[i].current.push(0);
             habits[i].state.push(0);
-            habits[i].status.push({'created': habits[i].status[index].created});
+            habits[i].status.push({});
           }
         }
       }

@@ -39,12 +39,14 @@ angular.module('codeApp')
         var habit = {
           'name': habitName,
           'streak': 0,
-          'status': [{'created': new Date()}],
+          'created': new Date(),
+          'status': [{}],
           'state': [habitApp.habitState.CREATED],
           'current': [0]
         };
         habitApp.habitName = '';
         LocalStorageService.addHabit(habit);
+        console.log(LocalStorageService.getHabits());
         habitApp.habits = addLastWeekStreak(LocalStorageService.getHabits());
       }
     }

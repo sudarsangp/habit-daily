@@ -48,6 +48,7 @@ angular.module('codeApp')
 					var singleHabit = {
 						'name': habits[i].name,
 		        'streak': habits[i].streak,
+		        'created': habits[i].created,
 		        'status': habits[i].status[habits[i].status.length - 1],
 		        'state': habits[i].state[habits[i].state.length - 1],
 		        'current': habits[i].state[habits[i].current.length - 1]

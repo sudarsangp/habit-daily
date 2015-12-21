@@ -47,7 +47,7 @@
       <span id="streak" ng-bind="habit.streak" ng-class="{alarming: habit.streak === 0, streaking: habit.streak !== 0}"></span>
     </div>
     <div class="col-xs-3 text-center">
-       <span ng-show="habit.state === main.habitState.CREATED">Created on {{ habit.status.created | amDateFormat: 'Do MMMM YYYY'}}</span>
+       <span ng-show="habit.state === main.habitState.CREATED">Created on {{ habit.created | amDateFormat: 'Do MMMM YYYY'}}</span>
       <span ng-show="habit.state === main.habitState.STARTED">started <span am-time-ago="habit.status.started"></span></span>
       <span ng-show="habit.state === main.habitState.FINISHED">{{ habit.status.timeDifference}}</span>
     </div>
