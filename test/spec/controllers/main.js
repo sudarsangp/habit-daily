@@ -12,7 +12,6 @@ describe('Controller: MainCtrl', function () {
         var habitsKey = 'dailyhabits';
         var storage = [];
         var get = jasmine.createSpy('get').and.callFake(function(key){
-          console.log(storage[key]);
           return storage[key];
         });
         var set = jasmine.createSpy('set').and.callFake(function(key, habitList){
@@ -77,7 +76,8 @@ describe('Controller: MainCtrl', function () {
       var testHabit = {
         'name': testHabitName, 
         'streak': 0, 
-        'status': [{'created': new Date()}], 
+        'created': new Date(),
+        'status': [{}], 
         'state': [MainCtrl.habitState.CREATED],
         'current': [0]
       };
@@ -175,5 +175,104 @@ describe('Controller: MainCtrl', function () {
   // not able to add unit test for contenteditable item -
   // cannot be done as contenteditable is added in html and check coverage docs for validation
 
+  describe('tooltip text', function(){
+    describe('today text', function(){
+      it('should check tooltip today text for zero habits', function(){
+        var smallHabit = {
+          'current': 0
+        };
+        var expectedToolTipText = 'oops.. you have not started your habit today';
+        var actualToolTipText = MainCtrl.toolTipTodayText(smallHabit);
+        expect(actualToolTipText).toEqual(expectedToolTipText);
+      });
+
+      it('should check tooltip today text for non-zero habits', function(){
+        var smallHabit = {
+          'current': 5
+        };
+        var expectedToolTipText = 'great job! you have completed your habit today :)';
+        var actualToolTipText = MainCtrl.toolTipTodayText(smallHabit);
+        expect(actualToolTipText).toEqual(expectedToolTipText);
+      });
+    });
+
+    describe('streak text', function(){
+      it('should check tooltip streak text for zero habits', function(){
+        var smallHabit = {
+          'name': 'small habit',
+          'streak': 0
+        };
+        var expectedToolTipText = 'oh.. you have not started with \"' + smallHabit.name + '\" habit';
+        var actualToolTipText = MainCtrl.toolTipStreakText(smallHabit);
+        expect(actualToolTipText).toEqual(expectedToolTipText);
+      });
+
+      it('should check tooltip today text for exactly 1 habit', function(){
+        var smallHabit = {
+          'name': 'small habit',
+          'streak': 1
+        };
+        var expectedToolTipText = 'good start for your habit streak';
+        var actualToolTipText = MainCtrl.toolTipStreakText(smallHabit);
+        expect(actualToolTipText).toEqual(expectedToolTipText);
+      });
+
+      it('should check tooltip today text for more than 1 habit', function(){
+        var smallHabit = {
+          'name': 'small habit',
+          'streak': 5
+        };
+        var expectedToolTipText = 'congrats on your ' + smallHabit.streak + ' days streak!';
+        var actualToolTipText = MainCtrl.toolTipStreakText(smallHabit);
+        expect(actualToolTipText).toEqual(expectedToolTipText);
+      });
+    });
+
+    describe('last week text', function(){
+      it('should check tooltip lastweek streak text for zero streak', function(){
+        var lastWeekHabit = {
+          'streak': 0,
+          'lastWeekStreakLength': 0,
+          'index': 0
+        };
+        var expectedToolTipText = 'oops.. you had missed habit';
+        var actualToolTipText = MainCtrl.toolTipLastWeekText(lastWeekHabit.streak, lastWeekHabit.lastWeekStreakLength, lastWeekHabit.index);
+        expect(actualToolTipText).toEqual(expectedToolTipText);
+      });
+
+      it('should check tooltip lastweek text for exactly 1 habit', function(){
+        var lastWeekHabit = {
+          'streak': 0,
+          'lastWeekStreakLength': 1,
+          'index': 0
+        };
+        var expectedToolTipText = 'you have a chance to do your habit';
+        var actualToolTipText = MainCtrl.toolTipLastWeekText(lastWeekHabit.streak, lastWeekHabit.lastWeekStreakLength, lastWeekHabit.index);
+        expect(actualToolTipText).toEqual(expectedToolTipText);
+      });
+
+      it('should check tooltip lastweek text for more than 1 streak not completed today', function(){
+        var lastWeekHabit = {
+          'streak': 1,
+          'lastWeekStreakLength': 1,
+          'index': 0
+        };
+        var expectedToolTipText = 'awesome! you have finished habit today';
+        var actualToolTipText = MainCtrl.toolTipLastWeekText(lastWeekHabit.streak, lastWeekHabit.lastWeekStreakLength, lastWeekHabit.index);
+        expect(actualToolTipText).toEqual(expectedToolTipText);
+      });
+
+      it('should check tooltip lastweek text for more than 1 streak but completed today', function(){
+        var lastWeekHabit = {
+          'streak': 1,
+          'lastWeekStreakLength': 1,
+          'index': 1
+        };
+        var expectedToolTipText = 'awesome! you had finished habit';
+        var actualToolTipText = MainCtrl.toolTipLastWeekText(lastWeekHabit.streak, lastWeekHabit.lastWeekStreakLength, lastWeekHabit.index);
+        expect(actualToolTipText).toEqual(expectedToolTipText);
+      });
+    });
+  });
 
 });

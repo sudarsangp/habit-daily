@@ -86,7 +86,8 @@ describe('Service: TimeService', function(){
 			var testHabits = [{
         'name': 'habitName',
         'streak': 0,
-        'status': [{'created': new Date()}],
+        'created': new Date(),
+        'status': [{}],
         'state': [0],
         'current': [0]
       }];
@@ -99,7 +100,8 @@ describe('Service: TimeService', function(){
 			var testHabits = [{
         'name': 'habitName',
         'streak': 0,
-        'status': [{'created': new Date(2015, 10, 27)}],
+        'created': new Date(2015, 10, 27),
+        'status': [{}],
         'state': [0],
         'current': [0]
       }];
@@ -112,7 +114,8 @@ describe('Service: TimeService', function(){
 			var testHabits = [{
         'name': 'habitName',
         'streak': 0,
-        'status': [{'created': new Date(2015, 10, 27)}],
+        'created': new Date(2015, 10, 27),
+        'status': [{}],
         'state': [0],
         'current': [0]
       }];

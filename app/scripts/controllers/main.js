@@ -46,7 +46,6 @@ angular.module('codeApp')
         };
         habitApp.habitName = '';
         LocalStorageService.addHabit(habit);
-        console.log(LocalStorageService.getHabits());
         habitApp.habits = addLastWeekStreak(LocalStorageService.getHabits());
       }
     }
