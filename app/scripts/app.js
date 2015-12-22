@@ -12,7 +12,8 @@ angular
   .module('codeApp', [
   	'angularMoment',
   	'ui.bootstrap',
-  	'LocalStorageModule'
+  	'LocalStorageModule',
+  	'ngMaterial'
   ])
   .config(function(localStorageServiceProvider){
   	localStorageServiceProvider.setPrefix('habit');

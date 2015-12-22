@@ -1,18 +1,16 @@
-<div class="row">
+<md-content layout-padding>
   <form name='habitAddForm'>
-  <div class="col-xs-4">
-  <div class="input-group">
-    <input type="text" class="form-control" ng-model="main.habitName" placeholder="enter your habit" required/>
-    <span class="input-group-btn">
-      <button class="btn btn-primary" ng-click="main.addHabit(main.habitName)" ng-disabled="habitAddForm.$invalid">Add</button>
-    </span>
-  </div>
-  </div>
+    <div layout-gt-sm="row">
+      <md-input-container class="md-block" flex-gt-sm>
+        <label>Habit Name</label>
+        <input ng-model="main.habitName" required>
+      </md-input-container>
+      <md-input-container>
+        <md-button class="md-raised md-primary" ng-click="main.addHabit(main.habitName)" ng-disabled="habitAddForm.$invalid">Add</md-button>
+      </md-input-container>
+    </div>
   </form>
-  <div class="col-xs-offset-3 col-xs-5">
-    Today: <span ng-bind="main.today"></span>
-  </div>
-</div>
+</md-content>
 
 <div class="habit-list">
   <div class="row" ng-if="main.habits.length > 0">
@@ -37,14 +35,17 @@
   <uib-accordion-group is-open="true">
   <uib-accordion-heading>
   <div class="row vertical-center-align remove-left remove-right">
-    <div class="col-xs-1 text-center" tooltip-placement="left" uib-tooltip="{{main.toolTipTodayText(habit)}}">
+    <div class="col-xs-1 text-center">
       <span class="glyphicon" ng-class="{alarming: !habit.current, 'glyphicon-minus': !habit.current, streaking: habit.current, 'glyphicon-ok': habit.current}"></span>
+      <md-tooltip md-direction="left">{{main.toolTipTodayText(habit)}}</md-tooltip>
     </div>
-    <div class="col-xs-3 text-center" tooltip-placement="top" uib-tooltip="click to edit name of habit">
+    <div class="col-xs-3 text-center">
       <span ng-bind="habit.name" contenteditable class="habit-item hand-writing" ng-model="habit.name"></span>
+      <md-tooltip md-direction="top">click to edit name of habit</md-tooltip>
     </div>
-    <div class="col-xs-2 text-center" tooltip-placement="top" uib-tooltip="{{main.toolTipStreakText(habit)}}">
+    <div class="col-xs-2 text-center">
       <span id="streak" ng-bind="habit.streak" ng-class="{alarming: habit.streak === 0, streaking: habit.streak !== 0}"></span>
+      <md-tooltip md-direction="top">{{main.toolTipStreakText(habit)}}</md-tooltip>
     </div>
     <div class="col-xs-3 text-center">
        <span ng-show="habit.state === main.habitState.CREATED">Created on {{ habit.created | amDateFormat: 'Do MMMM YYYY'}}</span>
@@ -53,9 +54,18 @@
     </div>
     <div class="col-xs-3 text-center">
       <div class="btn-group btn-group-sm">
-      <button class="btn btn-success" ng-click="main.beginHabit($index)" ng-show="habit.state === main.habitState.CREATED" tooltip-placement="top" uib-tooltip="start your habit today!">Start</button>
-      <button class="btn btn-primary" ng-click="main.finishHabit($index)" ng-show="habit.state === main.habitState.STARTED" tooltip-placement="top" uib-tooltip="yeah! finish habit your habit">Finish</button>
-      <button class="btn btn-danger" ng-click="main.removeHabit($index)" tooltip-placement="right" uib-tooltip="please don't remove your habit"><i class="glyphicon glyphicon-remove"></i></button>
+      <button class="btn btn-success" ng-click="main.beginHabit($index)" ng-show="habit.state === main.habitState.CREATED">
+        Start
+        <md-tooltip md-direction="top">start your habit today!</md-tooltip>
+      </button>
+      <button class="btn btn-primary" ng-click="main.finishHabit($index)" ng-show="habit.state === main.habitState.STARTED">
+        Finish
+        <md-tooltip md-direction="top">yeah! finish habit your habit</md-tooltip>
+      </button>
+      <button class="btn btn-danger" ng-click="main.removeHabit($index)">
+        <i class="glyphicon glyphicon-remove"></i>
+        <md-tooltip md-direction="right">please don't remove your habit</md-tooltip>
+      </button>
       </div>
     </div>
   </div>
@@ -65,7 +75,9 @@
       <span>Streak Past Week </span>
     </div>
     <div class="col-xs-1" ng-repeat="streakHabit in habit.lastWeekStreak track by $index">
-      <span class="glyphicon" ng-class="{ alarming: !streakHabit, 'glyphicon-minus': !! + !streakHabit && habit.lastWeekStreak.length - 1 === $index, streaking: streakHabit, 'glyphicon-ok': streakHabit, 'glyphicon-remove': !! + !streakHabit && habit.lastWeekStreak.length - 1 !== $index }" tooltip-placement="top" uib-tooltip="{{main.toolTipLastWeekText(streakHabit, habit.lastWeekStreak.length, $index)}}"></span>
+      <span class="glyphicon" ng-class="{ alarming: !streakHabit, 'glyphicon-minus': !! + !streakHabit && habit.lastWeekStreak.length - 1 === $index, streaking: streakHabit, 'glyphicon-ok': streakHabit, 'glyphicon-remove': !! + !streakHabit && habit.lastWeekStreak.length - 1 !== $index }">
+        <md-tooltip md-direction="top">{{main.toolTipLastWeekText(streakHabit, habit.lastWeekStreak.length, $index)}}</md-tooltip>
+      </span>
     </div>
   </div>
   
@@ -73,29 +85,5 @@
   </div>
   </uib-accordion>
   </div>
-</div>
-
-<div class="jumbotron">
-  <h1>'Allo, 'Allo!</h1>
-  <p class="lead">
-    <img src="images/yeoman.png" alt="I'm Yeoman"><br>
-    Always a pleasure scaffolding your apps.
-  </p>
-  <p><a class="btn btn-lg btn-success" ng-href="#/">Splendid!<span class="glyphicon glyphicon-ok"></span></a></p>
-</div>
-
-<div class="row marketing">
-  <h4>HTML5 Boilerplate</h4>
-  <p>
-    HTML5 Boilerplate is a professional front-end template for building fast, robust, and adaptable web apps or sites.
-  </p>
-
-  <h4>Angular</h4>
-  <p>
-    AngularJS is a toolset for building the framework most suited to your application development.
-  </p>
-
-  <h4>Karma</h4>
-  <p>Spectacular Test Runner for JavaScript.</p>
 </div>
 
