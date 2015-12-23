@@ -7,7 +7,7 @@
  * to handle basic functionalities
  */
 angular.module('codeApp')
-  .controller('MainCtrl', function ($window, TimeService, LocalStorageService) {
+  .controller('MainCtrl', function ($window, TimeService, LocalStorageService, $mdToast) {
     var habitApp = this;
 
     habitApp.awesomeThings = [
@@ -21,6 +21,8 @@ angular.module('codeApp')
       STARTED: 1,
       FINISHED: 2
     });
+    habitApp.defaultToastPosition = 'top right';
+    habitApp.defaultToastDisplayTime = 3000;
 
     habitApp.habits = initializeHabitsToday();
     habitApp.disableAddButton = true;
@@ -61,6 +63,12 @@ angular.module('codeApp')
       habitApp.habits[position].status.started = new Date();
       habitApp.habits[position].state = habitApp.habitState.STARTED;
       LocalStorageService.modifyHabit(position, habitApp.habits[position]);
+      $mdToast.show(
+        $mdToast.simple()
+          .textContent('congrats on starting \"' + habitApp.habits[position].name + '\" habit')
+          .position(habitApp.defaultToastPosition)
+          .hideDelay(habitApp.defaultToastDisplayTime)
+      );
     }
 
     function finishHabit(position) {
@@ -73,6 +81,12 @@ angular.module('codeApp')
       habitApp.habits[position].current = 1;
       LocalStorageService.modifyHabit(position, habitApp.habits[position]);
       habitApp.habits[position].lastWeekStreak = lastWeekHabitStreak(habitApp.habits[position]);
+      $mdToast.show(
+        $mdToast.simple()
+          .textContent('congrats on finishing \"' + habitApp.habits[position].name + '\" habit')
+          .position(habitApp.defaultToastPosition)
+          .hideDelay(habitApp.defaultToastDisplayTime)
+      );
     }
 
     function initializeHabitsToday() {
