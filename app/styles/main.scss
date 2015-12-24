@@ -121,5 +121,8 @@ body {
   .vertical-center-align {
     display: flex;
     align-items: center;
+    .item {
+      margin: auto;
+    }
   }
 }
