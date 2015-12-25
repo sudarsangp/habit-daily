@@ -125,4 +125,32 @@ body {
       margin: auto;
     }
   }
+
+  .panel-default > .panel-heading {
+    color: rgb(255,255,255);
+    background-color: rgb(121,134,203);
+  }
+
+  .warn {
+    svg{
+      fill: rgb(255,87,34);
+    }
+  }
+}
+
+.white-icon {
+  svg{
+    fill: rgb(255,255,255);
+  }
+}
+
+.fab-icon-position {
+  position: fixed;
+  right: 10px;
+}
+
+.green-icon {
+  svg{
+    fill: #0F9D58;
+  }
 }

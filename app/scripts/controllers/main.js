@@ -23,7 +23,9 @@ angular.module('codeApp')
     });
     habitApp.defaultToastPosition = 'top right';
     habitApp.defaultToastDisplayTime = 3000;
-
+    habitApp.showHabitForm = false;
+    habitApp.showPencil = false;
+    
     habitApp.habits = initializeHabitsToday();
     habitApp.disableAddButton = true;
     habitApp.today = moment().local().format('dddd[,] Do MMMM YYYY');

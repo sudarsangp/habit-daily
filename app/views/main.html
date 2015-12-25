@@ -1,4 +1,15 @@
-<md-content layout-padding>
+      
+<md-fab-speed-dial md-open="false" md-direction="bottom" class="md-scale fab-icon-position">
+  <md-fab-trigger>
+    <md-button aria-label="menu" class="md-fab md-warn" ng-click="main.showHabitForm = !main.showHabitForm" ng-mouseenter="main.showPencil = !main.showPencil" ng-mouseleave="main.showPencil = !main.showPencil">
+      <md-icon class="white-icon" ng-hide="main.showPencil" md-svg-src="images/add.svg"></md-icon>
+      <md-icon class="white-icon" ng-show="main.showPencil" md-svg-src="images/create.svg"></md-icon>
+      <md-tooltip md-direction="left">Create your habit</md-tooltip>
+    </md-button>
+  </md-fab-trigger>
+</md-fab-speed-dial>
+
+<md-content layout-padding ng-show="main.showHabitForm">
   <form name='habitAddForm'>
     <div layout-gt-sm="row">
       <md-input-container class="md-block" flex-gt-sm>
@@ -31,14 +42,14 @@
     </div>
   </div>
   <div ng-repeat="habit in main.habits" class="spacing bottom-only">
-  <uib-accordion>
+  <uib-accordion close-others="true">
   <uib-accordion-group is-open="true">
   <uib-accordion-heading>
   <div class="row vertical-center-align remove-left remove-right">
     <div class="col-xs-1 text-center">
-      <span>
-        <md-icon md-svg-src="images/done.svg" ng-if="habit.current"></md-icon>
-        <md-icon md-svg-src="images/remove.svg" ng-if="!habit.current"></md-icon>
+      <span class="md-hue-2">
+        <md-icon class="white-icon" md-svg-src="images/done.svg" ng-if="habit.current"></md-icon>
+        <md-icon class="white-icon" md-svg-src="images/remove.svg" ng-if="!habit.current"></md-icon>
       </span>
       <md-tooltip md-direction="left">{{main.toolTipTodayText(habit)}}</md-tooltip>
     </div>
@@ -57,11 +68,11 @@
     </div>
     <div class="col-xs-2 text-center">
       <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
-      <md-button ng-click="main.beginHabit($index)" ng-show="habit.state === main.habitState.CREATED">
+      <md-button class="md-raised" ng-click="main.beginHabit($index)" ng-show="habit.state === main.habitState.CREATED">
         Start
         <md-tooltip md-direction="top">start your habit today!</md-tooltip>
       </md-button>
-      <md-button ng-click="main.finishHabit($index)" ng-show="habit.state === main.habitState.STARTED">
+      <md-button class="md-raised" ng-click="main.finishHabit($index)" ng-show="habit.state === main.habitState.STARTED">
         Finish
         <md-tooltip md-direction="top">yeah! finish habit your habit</md-tooltip>
       </md-button>
@@ -73,15 +84,15 @@
   <div class="vertical-center-align">
     <div class="col-xs-1 item" ng-repeat="streakHabit in habit.lastWeekStreak track by $index">
       <span>
-        <md-icon md-svg-src="images/done.svg" ng-if="streakHabit"></md-icon>
+        <md-icon md-svg-src="images/done.svg" class="green-icon" ng-if="streakHabit"></md-icon>
         <md-icon md-svg-src="images/remove.svg" ng-if="!! + !streakHabit && habit.lastWeekStreak.length - 1 === $index"></md-icon>
         <md-icon md-svg-src="images/clear.svg" ng-if="!! + !streakHabit && habit.lastWeekStreak.length - 1 !== $index"></md-icon>
         <md-tooltip md-direction="top">{{main.toolTipLastWeekText(streakHabit, habit.lastWeekStreak.length, $index)}}</md-tooltip>
       </span>
     </div>
     <div class="item">
-      <md-button ng-click="main.removeHabit($index)">
-        <md-icon md-svg-src="images/delete.svg"></md-icon>
+      <md-button class="md-icon-button" ng-click="main.removeHabit($index)">
+        <md-icon md-svg-src="images/delete.svg" class="warn"></md-icon>
         <md-tooltip md-direction="right">please don't remove your habit</md-tooltip>
       </md-button>
     </div>
