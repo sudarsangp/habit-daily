@@ -13,7 +13,7 @@ angular.module('codeApp')
 
 		function addHabit(habit){
 			var currentHabitList = localStorageService.get(habitsKey) || [];
-			currentHabitList.push(habit);
+			currentHabitList.push(formatHabitForStorage(habit));
 			localStorageService.set(habitsKey, currentHabitList);
 		}
 
@@ -65,5 +65,17 @@ angular.module('codeApp')
 
 		function setAllHabitsData(allHabitsData){
 			localStorageService.set(habitsKey, allHabitsData);
+		}
+
+		function formatHabitForStorage(habit){
+			var formatHabit = {
+        'name': habit.name,
+        'streak': habit.streak,
+        'created': habit.created,
+        'status': [habit.status],
+        'state': [habit.state],
+        'current': [habit.current]
+      };
+      return formatHabit;
 		}
 	});

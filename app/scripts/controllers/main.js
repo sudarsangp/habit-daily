@@ -7,7 +7,7 @@
  * to handle basic functionalities
  */
 angular.module('codeApp')
-  .controller('MainCtrl', function ($window, TimeService, LocalStorageService, $mdToast) {
+  .controller('MainCtrl', function ($window, TimeService, LocalStorageService, $mdToast, $uibModal) {
     var habitApp = this;
 
     habitApp.awesomeThings = [
@@ -23,7 +23,6 @@ angular.module('codeApp')
     });
     habitApp.defaultToastPosition = 'top right';
     habitApp.defaultToastDisplayTime = 3000;
-    habitApp.showHabitForm = false;
     habitApp.showPencil = false;
     
     habitApp.habits = initializeHabitsToday();
@@ -33,6 +32,7 @@ angular.module('codeApp')
     habitApp.removeHabit = removeHabit;
     habitApp.beginHabit = beginHabit;
     habitApp.finishHabit = finishHabit;
+    habitApp.openAddHabitModal = openAddHabitModal;
 
     habitApp.toolTipTodayText = toolTipTodayText;
     habitApp.toolTipStreakText = toolTipStreakText;
@@ -44,20 +44,21 @@ angular.module('codeApp')
           'name': habitName,
           'streak': 0,
           'created': new Date(),
-          'status': [{}],
-          'state': [habitApp.habitState.CREATED],
-          'current': [0]
+          'status': {},
+          'state': habitApp.habitState.CREATED,
+          'current': 0
         };
         habitApp.habitName = '';
         LocalStorageService.addHabit(habit);
-        habitApp.habits = addLastWeekStreak(LocalStorageService.getHabits());
+        habit.lastWeekStreak = lastWeekHabitStreak(habit);
+        habitApp.habits.push(habit);
       }
     }
 
     function removeHabit(position) {
       if($window.confirm('habitApp action will delete habitApp habit')){
         LocalStorageService.removeHabit(position);
-        habitApp.habits = addLastWeekStreak(LocalStorageService.getHabits());
+        habitApp.habits.splice(position, 1);
       }
     }
 
@@ -159,5 +160,22 @@ angular.module('codeApp')
         toolTipString = 'oops.. you had missed habit';
       }
       return toolTipString;
+    }
+
+    function openAddHabitModal(){
+      habitApp.showHabitForm = !habitApp.showHabitForm;
+      var modalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: 'addHabitForm.html',
+        controller: 'HabitModalInstanceCtrl',
+        resolve: {
+          showHabitForm: function () {
+            return habitApp.showHabitForm;
+          }
+        }
+      });
+      modalInstance.result.then(function (habitName) {
+        habitApp.addHabit(habitName);
+      });
     }
   });

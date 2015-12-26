@@ -13,7 +13,8 @@ angular
   	'angularMoment',
   	'ui.bootstrap',
   	'LocalStorageModule',
-  	'ngMaterial'
+  	'ngMaterial',
+  	'luegg.directives'
   ])
   .config(function(localStorageServiceProvider){
   	localStorageServiceProvider.setPrefix('habit');
