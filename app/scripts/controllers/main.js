@@ -163,14 +163,13 @@ angular.module('codeApp')
     }
 
     function openAddHabitModal(){
-      habitApp.showHabitForm = !habitApp.showHabitForm;
       var modalInstance = $uibModal.open({
         animation: true,
         templateUrl: 'addHabitForm.html',
         controller: 'HabitModalInstanceCtrl',
         resolve: {
-          showHabitForm: function () {
-            return habitApp.showHabitForm;
+          currentHabits: function () {
+            return habitApp.habits;
           }
         }
       });

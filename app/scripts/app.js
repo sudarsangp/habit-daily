@@ -14,7 +14,8 @@ angular
   	'ui.bootstrap',
   	'LocalStorageModule',
   	'ngMaterial',
-  	'luegg.directives'
+  	'luegg.directives',
+  	'ui.validate'
   ])
   .config(function(localStorageServiceProvider){
   	localStorageServiceProvider.setPrefix('habit');

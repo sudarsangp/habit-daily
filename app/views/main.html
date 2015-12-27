@@ -98,7 +98,7 @@
         <div layout-gt-sm="row">
           <md-input-container class="md-block" flex-gt-sm>
             <label>Habit Name</label>
-            <input ng-model="habitName" required>
+            <input ng-model="habitName" required ui-validate="'notDuplicateHabit($value)'">
           </md-input-container>
           <md-input-container>
             <md-button class="md-raised md-primary" ng-click="addHabit(habitName)" ng-disabled="habitAddForm.$invalid">Add</md-button>
