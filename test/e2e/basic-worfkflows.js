@@ -10,10 +10,11 @@ describe('basic habit workflows', function() {
   describe('adding habits: ', function(){
     it('should add single habit', function() {
       var habitList = element.all(by.repeater('habit in main.habits'));
+      element(by.css('.md-fab')).click();
       element(by.buttonText('Add')).click();
       expect(habitList.count()).toBe(0);
 
-      var query = element(by.model('main.habitName'));
+      var query = element(by.model('habitName'));
       query.sendKeys('hello world');
       expect(query.getAttribute('value')).toBe('hello world');
 
@@ -23,17 +24,20 @@ describe('basic habit workflows', function() {
 
     it('should add multiple habits', function() {
       var habitList = element.all(by.repeater('habit in main.habits'));
+      element(by.css('.md-fab')).click();
       element(by.buttonText('Add')).click();
       expect(habitList.count()).toBe(0);
 
-      var query = element(by.model('main.habitName'));
+      var query = element(by.model('habitName'));
 
       query.sendKeys('first habit');
       element(by.buttonText('Add')).click();
 
+      element(by.css('.md-fab')).click();
       query.sendKeys('second habit');
       element(by.buttonText('Add')).click();
 
+      element(by.css('.md-fab')).click();
       query.sendKeys('third habit');
       element(by.buttonText('Add')).click();
 
@@ -47,9 +51,9 @@ describe('basic habit workflows', function() {
   //   });
 
   //   it('should be able to edit habit', function() {
-  //     var query = element(by.model('main.habitName'));
+  //     var query = element(by.model('habitName'));
   //     query.sendKeys('first habit');
-  //     element(by.buttonText('Add')).click();
+  //     element(by.css('.md-fab')).click();
   //     element.all(by.repeater('habit in main.habits')).then(function(habits){
   //       habits[0].element(by.className('habit-item')).click();
   //     });
@@ -58,26 +62,28 @@ describe('basic habit workflows', function() {
 
   describe('adding and removing habits: ', function(){
     it('should be able to add a habit and remove a habit', function(){
-      var query = element(by.model('main.habitName'));
+      element(by.css('.md-fab')).click();
+      var query = element(by.model('habitName'));
       query.sendKeys('first habit');
       element(by.buttonText('Add')).click();
 
       var habitList = element.all(by.repeater('habit in main.habits'));
       element.all(by.repeater('habit in main.habits')).then(function(habits){
-        habits[0].element(by.className('glyphicon-remove')).click();
+        habits[0].element(by.css('.md-icon-button')).click();
         browser.switchTo().alert().accept();
         expect(habitList.count()).toBe(0);
       });
     });
 
     it('should be able to add a habit and not allowing removing a habit', function(){
-      var query = element(by.model('main.habitName'));
+      var query = element(by.model('habitName'));
+      element(by.css('.md-fab')).click();
       query.sendKeys('first habit');
       element(by.buttonText('Add')).click();
 
       var habitList = element.all(by.repeater('habit in main.habits'));
       element.all(by.repeater('habit in main.habits')).then(function(habits){
-        habits[0].element(by.className('glyphicon-remove')).click();
+        habits[0].element(by.css('.md-icon-button')).click();
         browser.switchTo().alert().dismiss();
         expect(habitList.count()).toBe(1);
       });
@@ -87,11 +93,11 @@ describe('basic habit workflows', function() {
   // removing multiple habits
   // describe('adding and removing multiple habits: ', function(){
   //   it('should be able to add a habit and remove a habit', function(){
-  //     var query = element(by.model('main.habitName'));
+  //     var query = element(by.model('habitName'));
   //     query.sendKeys('first habit');
-  //     element(by.buttonText('Add')).click();
+  //     element(by.css('.md-fab')).click();
   //     query.sendKeys('second habit');
-  //     element(by.buttonText('Add')).click();
+  //     element(by.css('.md-fab')).click();
 
   //     var habitList = element.all(by.repeater('habit in main.habits'));
   //     habitList.then(function(habits){
@@ -114,17 +120,17 @@ describe('basic habit workflows', function() {
 
   describe('starting habits: ', function(){
     it('should be start a habit after adding ', function(){
-      var query = element(by.model('main.habitName'));
+      element(by.css('.md-fab')).click();
+      var query = element(by.model('habitName'));
       query.sendKeys('first habit');
       element(by.buttonText('Add')).click();
-
+      
       var habitList = element.all(by.repeater('habit in main.habits'));
       habitList.then(function(habits){
-        console.log()
         habits[0].element(by.id('streak')).getText().then(function(text){
           expect(text).toEqual('0');
         });
-        habits[0].element(by.className('btn-success')).click();
+        habits[0].element(by.css('.md-raised')).click();
         habits[0].element(by.id('streak')).getText().then(function(text){
           expect(text).toEqual('0');
         });
@@ -137,7 +143,8 @@ describe('basic habit workflows', function() {
 
   describe('finishing habits: ', function(){
     it('should be finish a habit after adding ', function(){
-      var query = element(by.model('main.habitName'));
+      element(by.css('.md-fab')).click();
+      var query = element(by.model('habitName'));
       query.sendKeys('first habit');
       element(by.buttonText('Add')).click();
 
@@ -146,8 +153,8 @@ describe('basic habit workflows', function() {
         habits[0].element(by.id('streak')).getText().then(function(text){
           expect(text).toEqual('0');
         });
-        habits[0].element(by.className('btn-success')).click();
-        habits[0].element(by.className('btn-primary')).click();
+        habits[0].element(by.buttonText('Start')).click();
+        habits[0].element(by.buttonText('Finish')).click();
         habits[0].element(by.id('streak')).getText().then(function(text){
           expect(text).toEqual('1');
         });
@@ -164,9 +171,9 @@ describe('basic habit workflows', function() {
   //     // var baseDate = new Date(2015, 12, 13);
   //     // jasmine.clock().mockDate(baseDate);
 
-  //     // var query = element(by.model('main.habitName'));
+  //     // var query = element(by.model('habitName'));
   //     // query.sendKeys('first habit');
-  //     // element(by.buttonText('Add')).click();
+  //     // element(by.css('.md-fab')).click();
   //     // jasmine.clock().uninstall();
   //   });
   // });
