@@ -27,12 +27,18 @@ describe('Controller: MainCtrl', function () {
 
   var MainCtrl,
     scope;
-
+  var modal = { 
+    open: function() {
+      var modalInstance = {'result': {'then': function(){return 'hello'}}}
+      return modalInstance;
+    } 
+  };
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
     MainCtrl = $controller('MainCtrl', {
-      $scope: scope
+      $scope: scope,
+      $uibModal: modal
       // place here mocked dependencies
     });
   }));
@@ -274,5 +280,11 @@ describe('Controller: MainCtrl', function () {
       });
     });
   });
+  
+  describe('openAddHabitModal', function(){
 
+    it('should open modal', function(){
+      MainCtrl.openAddHabitModal();
+    });
+  });
 });
