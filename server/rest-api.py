@@ -1,8 +1,11 @@
 from flask import Flask, abort
 from flask.ext.restful import Api, Resource, reqparse, fields, marshal
+from flask.ext.mongoengine import MongoEngine
+from mongoengine import Document, StringField, IntField, ListField, DictField
 
 app = Flask(__name__)
 api = Api(app)
+db = MongoEngine(app)
 
 status_fields = {
 	'started': fields.Integer,
@@ -34,6 +37,13 @@ class HabitListAPI(Resource):
 		super(HabitListAPI, self).__init__()
 
 	def get(self):
+		for habit in HabitDaily.objects:
+			print 'name: ' + str(habit.name)
+			print 'streak: ' + str(habit.streak)
+			print 'created: ' + str(habit.created)
+			print 'status: ' + str(habit.status)
+			print 'state: ' + str(habit.state)
+			print 'current: ' + str(habit.current)
 		return {'habits': [marshal(habit, habit_fields) for habit in test_habits]}
 
 	def post(self):
@@ -49,6 +59,7 @@ class HabitListAPI(Resource):
 			'current': args['current']
 		}
 		test_habits.append(habit)
+		db_habit = HabitDaily(name = habit['name'],streak = habit['streak'],created = habit['created'],status = habit['status'],state = habit['state'],current = habit['current']).save()
 		return {'task': marshal(habit, habit_fields)}, 201
 
 class HabitAPI(Resource):
@@ -97,5 +108,13 @@ api.add_resource(HabitAPI, '/habitdaily/api/v1.0/habits/<int:id>', endpoint='hab
 	 curl -i http://127.0.0.1:8000/habitdaily/api/v1.0/habits/0 GET REQUEST
 	 curl -i -X DELETE http://127.0.0.1:8000/habitdaily/api/v1.0/habits/0
 """
+
+class HabitDaily(Document):
+	name = StringField()
+	streak = IntField()
+	created = IntField()
+	status = ListField(DictField())
+	state = ListField(IntField())
+	current = ListField(IntField())
 
 app.run(host='127.0.0.1', port=8000, debug=True)
