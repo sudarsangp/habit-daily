@@ -19,8 +19,8 @@ habit_fields = {
 	'created': fields.Integer,
 	'status': fields.List(fields.Nested(status_fields)),
 	'state': fields.List(fields.Integer),
-	'current': fields.List(fields.Integer),
-	'uri': fields.Url('habit')
+	'current': fields.List(fields.Integer)
+	# 'uri': fields.Url('habit')
 }
 
 test_habits = []
@@ -37,14 +37,8 @@ class HabitListAPI(Resource):
 		super(HabitListAPI, self).__init__()
 
 	def get(self):
-		for habit in HabitDaily.objects:
-			print 'name: ' + str(habit.name)
-			print 'streak: ' + str(habit.streak)
-			print 'created: ' + str(habit.created)
-			print 'status: ' + str(habit.status)
-			print 'state: ' + str(habit.state)
-			print 'current: ' + str(habit.current)
-		return {'habits': [marshal(habit, habit_fields) for habit in test_habits]}
+		all_habits = HabitFormat().all_habits_db_to_api(HabitDaily.objects)
+		return {'habits': [marshal(habit, habit_fields) for habit in all_habits]}
 
 	def post(self):
 		args = self.reqparse.parse_args()
@@ -60,7 +54,14 @@ class HabitListAPI(Resource):
 		}
 		test_habits.append(habit)
 		db_habit = HabitDaily(name = habit['name'],streak = habit['streak'],created = habit['created'],status = habit['status'],state = habit['state'],current = habit['current']).save()
-		return {'task': marshal(habit, habit_fields)}, 201
+		format_habit = HabitFormat().db_to_api(db_habit)
+		max_id = 0
+		for mapper in HabitMapper.objects:
+			if max_id < int(mapper.habitId):
+				max_id = int(mapper.habitId)
+		id_value = max_id + 1 if max_id > 0 else 1
+		mapper_habit = HabitMapper(habitId = int(id_value), objectId = str(db_habit.id)).save()
+		return {'task': marshal(format_habit, habit_fields)}, 201
 
 class HabitAPI(Resource):
 	def __init__(self):
@@ -116,5 +117,32 @@ class HabitDaily(Document):
 	status = ListField(DictField())
 	state = ListField(IntField())
 	current = ListField(IntField())
+
+class HabitFormat:
+	def db_to_api(self, habit):
+		self.habitFormat = {}
+		self.habitFormat['name']= habit.name
+		self.habitFormat['streak'] = habit.streak
+		self.habitFormat['created'] = habit.created
+		self.habitFormat['status'] = habit.status
+		self.habitFormat['state'] = habit.state
+		self.habitFormat['current'] = habit.current
+		self.habitFormat['id'] = self.get_habit_id_from_object_id(habit.id)
+		return self.habitFormat
+
+	def all_habits_db_to_api(self, all_habits):
+		self.list_habits = []
+		for habit in all_habits:
+			self.list_habits.append(self.db_to_api(habit))
+		return self.list_habits
+
+	def get_habit_id_from_object_id(self, object_id):
+		for mapper in HabitMapper.objects:
+			if str(object_id) == str(mapper.objectId):
+				return int(mapper.habitId)
+
+class HabitMapper(Document):
+	objectId = StringField()
+	habitId = IntField()
 
 app.run(host='127.0.0.1', port=8000, debug=True)
