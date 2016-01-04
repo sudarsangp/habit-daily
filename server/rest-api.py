@@ -19,11 +19,9 @@ habit_fields = {
 	'created': fields.Integer,
 	'status': fields.List(fields.Nested(status_fields)),
 	'state': fields.List(fields.Integer),
-	'current': fields.List(fields.Integer)
-	# 'uri': fields.Url('habit')
+	'current': fields.List(fields.Integer),
+	'uri': fields.Url('habit')
 }
-
-test_habits = []
 
 class HabitListAPI(Resource):
 	def __init__(self):
@@ -42,9 +40,8 @@ class HabitListAPI(Resource):
 
 	def post(self):
 		args = self.reqparse.parse_args()
-		habit_id = test_habits[-1]['id'] + 1 if len(test_habits) > 0 else 0
 		habit = {
-			'id': habit_id,
+			'id': 0,
 			'name': args['name'],
 			'streak': args['streak'],
 			'created': args['created'],
@@ -52,7 +49,6 @@ class HabitListAPI(Resource):
 			'state': args['state'],
 			'current': args['current']
 		}
-		test_habits.append(habit)
 		db_habit = HabitDaily(name = habit['name'],streak = habit['streak'],created = habit['created'],status = habit['status'],state = habit['state'],current = habit['current']).save()
 		format_habit = HabitFormat().db_to_api(db_habit)
 		max_id = 0
@@ -60,6 +56,7 @@ class HabitListAPI(Resource):
 			if max_id < int(mapper.habitId):
 				max_id = int(mapper.habitId)
 		id_value = max_id + 1 if max_id > 0 else 1
+		habit['id'] = id_value
 		mapper_habit = HabitMapper(habitId = int(id_value), objectId = str(db_habit.id)).save()
 		return {'task': marshal(format_habit, habit_fields)}, 201
 
@@ -75,27 +72,37 @@ class HabitAPI(Resource):
 		super(HabitAPI, self).__init__()
 
 	def get(self, id):
-		habit = [habit for habit in test_habits if habit['id'] == id]
-		if len(habit) == 0:
+		object_id = HabitFormat().get_object_id_from_habit_id(id)
+		habit = HabitFormat().db_to_api(HabitDaily.objects.get(id = object_id))
+
+		if not bool(habit):
 			abort(404)
-		return {'habit': marshal(habit[0], habit_fields)}
+		return {'habit': marshal(habit, habit_fields)}
 
 	def put(self, id):
-		habit = [habit for habit in test_habits if habit['id'] == id]
-		if len(habit) == 0:
+		object_id = HabitFormat().get_object_id_from_habit_id(id)
+		db_habit = HabitDaily.objects.get(id = object_id)
+		
+		if not bool(db_habit):
 			abort(404)
-		habit = habit[0]
+
 		args = self.reqparse.parse_args()
 		for k,v in args.items():
 			if v is not None:
-				habit[k] = v
+				db_habit[k] = v
+		db_habit.save()
+
+		habit = HabitFormat().db_to_api(db_habit)
 		return {'habit': marshal(habit, habit_fields)}
 
 	def delete(self, id):
-		habit = [habit for habit in test_habits if habit['id'] == id]
-		if len(habit) == 0:
+		object_id = HabitFormat().get_object_id_from_habit_id(id)
+		db_habit = HabitDaily.objects.get(id = object_id)
+		
+		if not bool(db_habit):
 			abort(404)
-		test_habits.remove(habit[0])
+		
+		db_habit.delete()
 		return {'result': True}
 
 api.add_resource(HabitListAPI, '/habitdaily/api/v1.0/habits', endpoint='habits')
@@ -140,6 +147,11 @@ class HabitFormat:
 		for mapper in HabitMapper.objects:
 			if str(object_id) == str(mapper.objectId):
 				return int(mapper.habitId)
+
+	def get_object_id_from_habit_id(self, habit_id):
+		for mapper in HabitMapper.objects:
+			if int(habit_id) == int(mapper.habitId):
+				return str(mapper.objectId)
 
 class HabitMapper(Document):
 	objectId = StringField()
