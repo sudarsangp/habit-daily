@@ -7,7 +7,7 @@
  * to handle basic functionalities
  */
 angular.module('codeApp')
-  .controller('MainCtrl', function ($window, TimeService, LocalStorageService, $mdToast, $uibModal) {
+  .controller('MainCtrl', function ($window, TimeService, LocalStorageService, $mdToast, $uibModal, DbHabitService) {
     var habitApp = this;
 
     habitApp.awesomeThings = [
@@ -93,6 +93,7 @@ angular.module('codeApp')
     }
 
     function initializeHabitsToday() {
+      DbHabitService.getAllHabits();
       var habits = LocalStorageService.getAllHabitsData() || [];
       var today = moment().local();
       if(habits.length > 0){
