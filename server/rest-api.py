@@ -54,6 +54,8 @@ def crossdomain(origin=None, methods=None, headers=None,
         return update_wrapper(wrapped_function, f)
     return decorator
 
+api.decorators = [crossdomain(origin='*')]
+
 status_fields = {
 	'started': fields.Integer,
 	'finished': fields.Integer
@@ -85,7 +87,6 @@ class HabitListAPI(Resource):
 		all_habits = HabitFormat().all_habits_db_to_api(HabitDaily.objects)
 		return {'habits': [marshal(habit, habit_fields) for habit in all_habits]}
 
-	@crossdomain(origin='*')
 	def post(self):
 		args = self.reqparse.parse_args()
 		habit = {
