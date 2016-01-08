@@ -93,8 +93,13 @@ angular.module('codeApp')
     }
 
     function initializeHabitsToday() {
-      DbHabitService.getAllHabits();
-      var habits = LocalStorageService.getAllHabitsData() || [];
+      var habits;
+      if($window.navigator.onLine) {
+        DbHabitService.getAllHabitsData().then(function(response){
+          console.log(response.data.habits);
+        });  
+      }
+      habits = LocalStorageService.getAllHabitsData() || [];  
       var today = moment().local();
       if(habits.length > 0){
         habits = TimeService.updateHabitDaily(habits, today);
