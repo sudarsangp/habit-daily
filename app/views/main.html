@@ -27,6 +27,11 @@
       <h4>Actions</h4>
     </div>
   </div>
+  <div class="container center-text" ng-if="main.habits.length === 0">
+    <h3>Your Habits</h3>
+    <div>When you create habits, you will see your habits here</div>
+    <md-button class="md-raised md-primary" ng-click="main.openAddHabitModal()">Create Habit</md-button>
+  </div>
   <div scroll-glue>
   <div ng-repeat="habit in main.habits" class="spacing bottom-only">
   <uib-accordion>

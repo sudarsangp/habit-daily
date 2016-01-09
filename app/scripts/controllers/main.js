@@ -94,20 +94,33 @@ angular.module('codeApp')
 
     function initializeHabitsToday() {
       var habits;
-      if($window.navigator.onLine) {
-        DbHabitService.getAllHabitsData().then(function(response){
+      var today = moment().local();
+      var todayHabits;
+      
+      if(!$window.navigator.onLine) {
+        habits = LocalStorageService.getAllHabitsData() || [];  
+        if(habits.length > 0){
+          habits = TimeService.updateHabitDaily(habits, today);
+        }
+        LocalStorageService.setAllHabitsData(habits);
+        todayHabits = LocalStorageService.getHabits();
+        todayHabits = addLastWeekStreak(todayHabits);
+        return todayHabits;
+      } 
+      else {
+        DbHabitService.getAllHabitsData().then(function (response){
           console.log(response.data.habits);
+        }, function (response){
+          habits = LocalStorageService.getAllHabitsData() || [];  
+          if(habits.length > 0){
+            habits = TimeService.updateHabitDaily(habits, today);
+          }
+          LocalStorageService.setAllHabitsData(habits);
+          todayHabits = LocalStorageService.getHabits();
+          todayHabits = addLastWeekStreak(todayHabits);
+          return todayHabits;
         });  
       }
-      habits = LocalStorageService.getAllHabitsData() || [];  
-      var today = moment().local();
-      if(habits.length > 0){
-        habits = TimeService.updateHabitDaily(habits, today);
-      }
-      LocalStorageService.setAllHabitsData(habits);
-      var todayHabits = LocalStorageService.getHabits();
-      todayHabits = addLastWeekStreak(todayHabits);
-      return todayHabits;
     }
 
     function lastWeekHabitStreak(habit) {
