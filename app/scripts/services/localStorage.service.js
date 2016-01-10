@@ -8,7 +8,8 @@ angular.module('codeApp')
 		this.getHabits = getHabits;
 		this.getAllHabitsData = getAllHabitsData;
 		this.setAllHabitsData = setAllHabitsData;
-		
+		this.getTodayHabits = getTodayHabits;
+
 		var habitsKey = 'dailyhabits';
 
 		function addHabit(habit){
@@ -38,7 +39,7 @@ angular.module('codeApp')
 		}
 
 		function getHabits(){
-			return getTodayHabits(localStorageService.get(habitsKey));
+			return this.getTodayHabits(localStorageService.get(habitsKey));
 		}
 
 		function getTodayHabits(habits){

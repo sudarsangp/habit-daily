@@ -109,7 +109,14 @@ angular.module('codeApp')
       } 
       else {
         DbHabitService.getAllHabitsData().then(function (response){
-          console.log(response.data.habits);
+          habits = response.data.habits || [];
+          if(habits.length > 0){
+            habits = TimeService.updateHabitDaily(habits, today);
+          }
+          todayHabits = LocalStorageService.getTodayHabits(habits);
+          todayHabits = addLastWeekStreak(todayHabits);
+          console.log(todayHabits);
+          return todayHabits;
         }, function (response){
           habits = LocalStorageService.getAllHabitsData() || [];  
           if(habits.length > 0){
