@@ -9,7 +9,7 @@ angular.module('codeApp')
 			return $http.get('http://127.0.0.1:8000/habitdaily/api/v1.0/habits', {timeout: 5000});
 		}
 
-		function updateHabit(habit){
-			return $http.put('http://127.0.0.1:8000/habitdaily/api/v1.0/habits/' + habit.id, habit);
+		function updateHabit(uri, habit){
+			return $http.put('http://127.0.0.1:8000/' + uri, habit);
 		}
 	});
