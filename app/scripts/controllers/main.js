@@ -25,7 +25,6 @@ angular.module('codeApp')
     habitApp.defaultToastDisplayTime = 3000;
     habitApp.showPencil = false;
     
-    habitApp.habits = initializeHabitsToday();
     habitApp.disableAddButton = true;
     habitApp.today = moment().local().format('dddd[,] Do MMMM YYYY');
     habitApp.addHabit = addHabit;
@@ -65,6 +64,9 @@ angular.module('codeApp')
     function beginHabit(position) {
       habitApp.habits[position].status.started = new Date();
       habitApp.habits[position].state = habitApp.habitState.STARTED;
+      // DbHabitService.updateHabit(habitApp.habits[position]).then(function (response){
+      //   console.log(response);
+      // });
       LocalStorageService.modifyHabit(position, habitApp.habits[position]);
       $mdToast.show(
         $mdToast.simple()
@@ -105,7 +107,7 @@ angular.module('codeApp')
         LocalStorageService.setAllHabitsData(habits);
         todayHabits = LocalStorageService.getHabits();
         todayHabits = addLastWeekStreak(todayHabits);
-        return todayHabits;
+        habitApp.habits = todayHabits;
       } 
       else {
         DbHabitService.getAllHabitsData().then(function (response){
@@ -115,8 +117,7 @@ angular.module('codeApp')
           }
           todayHabits = LocalStorageService.getTodayHabits(habits);
           todayHabits = addLastWeekStreak(todayHabits);
-          console.log(todayHabits);
-          return todayHabits;
+          habitApp.habits = todayHabits;
         }, function (response){
           habits = LocalStorageService.getAllHabitsData() || [];  
           if(habits.length > 0){
@@ -125,7 +126,7 @@ angular.module('codeApp')
           LocalStorageService.setAllHabitsData(habits);
           todayHabits = LocalStorageService.getHabits();
           todayHabits = addLastWeekStreak(todayHabits);
-          return todayHabits;
+          habitApp.habits = todayHabits;
         });  
       }
     }
@@ -203,4 +204,6 @@ angular.module('codeApp')
         habitApp.addHabit(habitName);
       });
     }
+
+    initializeHabitsToday();
   });
