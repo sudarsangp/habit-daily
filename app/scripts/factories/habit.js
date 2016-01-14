@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('teamieApp')
+angular.module('codeApp')
 	.factory('Habit', function(){
 
 		function Habit(){
