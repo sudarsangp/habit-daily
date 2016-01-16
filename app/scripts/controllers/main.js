@@ -24,7 +24,6 @@ angular.module('codeApp')
     habitApp.defaultToastPosition = 'top right';
     habitApp.defaultToastDisplayTime = 3000;
     habitApp.showPencil = false;
-    habitApp.isOnline = $window.navigator.onLine;
     habitApp.disableAddButton = true;
     habitApp.today = moment().local().format('dddd[,] Do MMMM YYYY');
     habitApp.addHabit = addHabit;
@@ -37,12 +36,16 @@ angular.module('codeApp')
     habitApp.toolTipStreakText = toolTipStreakText;
     habitApp.toolTipLastWeekText = toolTipLastWeekText;
 
-    $scope.$watch('isOnline', function(newValue, oldValue){
-      console.log('in watch');
+    $scope.$watch('online', function(newValue, oldValue){
       if(newValue !== oldValue){
-        console.log('change');
+        if(newValue){
+          console.log('online');
+        }
+        else {
+          console.log('offline');
+        }
       }
-    }, true);
+    });
 
     function addHabit(habitName) {
       if(habitName){
