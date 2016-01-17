@@ -38,11 +38,29 @@ angular.module('codeApp')
 
     $scope.$watch('online', function(newValue, oldValue){
       if(newValue !== oldValue){
+        var habits;
+        var today = moment().local();
+        var todayHabits;
         if(newValue){
-          console.log('online');
+          DbHabitService.getAllHabitsData().then(function (response){
+            habits = response.data.habits || [];
+            if(habits.length > 0){
+              habits = TimeService.updateHabitDaily(habits, today);
+            }
+            todayHabits = LocalStorageService.getTodayHabits(habits);
+            todayHabits = addLastWeekStreak(todayHabits);
+            habitApp.habits = todayHabits;
+          });
         }
         else {
-          console.log('offline');
+          habits = LocalStorageService.getAllHabitsData() || [];  
+          if(habits.length > 0){
+            habits = TimeService.updateHabitDaily(habits, today);
+          }
+          LocalStorageService.setAllHabitsData(habits);
+          todayHabits = LocalStorageService.getHabits();
+          todayHabits = addLastWeekStreak(todayHabits);
+          habitApp.habits = todayHabits;
         }
       }
     });
