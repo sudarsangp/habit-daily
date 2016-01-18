@@ -151,6 +151,7 @@ angular.module('codeApp')
       else {
         DbHabitService.getAllHabitsData().then(function (response){
           habits = response.data.habits || [];
+          LocalStorageService.setAllHabitsData(habits);
           if(habits.length > 0){
             habits = TimeService.updateHabitDaily(habits, today);
           }
