@@ -7,7 +7,7 @@
  * to handle basic functionalities
  */
 angular.module('codeApp')
-  .controller('MainCtrl', function ($scope, $window, TimeService, LocalStorageService, $mdToast, $uibModal, DbHabitService) {
+  .controller('MainCtrl', function ($scope, $window, TimeService, LocalStorageService, $mdToast, $uibModal, DbHabitService, Habit) {
     var habitApp = this;
 
     habitApp.awesomeThings = [
@@ -67,15 +67,12 @@ angular.module('codeApp')
 
     function addHabit(habitName) {
       if(habitName){
-        var habit = {
-          'name': habitName,
-          'streak': 0,
-          'created': new Date(),
-          'status': {},
-          'state': habitApp.habitState.CREATED,
-          'current': 0
-        };
+        var habit = new Habit();
+        habit.name = habitName;
         habitApp.habitName = '';
+        DbHabitService.createHabit(habit.requestBody).then(function(response){
+          console.log(response);
+        });
         LocalStorageService.addHabit(habit);
         habit.lastWeekStreak = lastWeekHabitStreak(habit);
         habitApp.habits.push(habit);
@@ -96,9 +93,9 @@ angular.module('codeApp')
         LocalStorageService.modifyHabit(position, habitApp.habits[position]);
       } 
       else{
-        DbHabitService.updateHabit(habitApp.habits[position]).then(function (response){
-          console.log(response);
-        });
+        // DbHabitService.updateHabit(habitApp.habits[position]).then(function (response){
+        //   console.log(response);
+        // });
       }
       $mdToast.show(
         $mdToast.simple()
