@@ -70,7 +70,8 @@ angular.module('codeApp')
         var habit = new Habit();
         habit.name = habitName;
         habitApp.habitName = '';
-        DbHabitService.createHabit(habit.requestBody).then(function(response){
+        console.log(habit.requestBody());
+        DbHabitService.createHabit(habit.requestBody()).then(function(response){
           console.log(response);
         });
         LocalStorageService.addHabit(habit);
@@ -117,9 +118,9 @@ angular.module('codeApp')
         LocalStorageService.modifyHabit(position, habitApp.habits[position]);
       } 
       else{
-        DbHabitService.updateHabit(habitApp.habits[position]).then(function (response){
-          console.log(response);
-        });
+        // DbHabitService.updateHabit(habitApp.habits[position]).then(function (response){
+        //   console.log(response);
+        // });
       }
       habitApp.habits[position].lastWeekStreak = lastWeekHabitStreak(habitApp.habits[position]);
       $mdToast.show(
