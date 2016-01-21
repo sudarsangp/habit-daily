@@ -148,23 +148,25 @@ angular.module('codeApp')
       } 
       else {
         DbHabitService.getAllHabitsData().then(function (response){
-          habits = response.data.habits || [];
-          LocalStorageService.setAllHabitsData(habits);
-          if(habits.length > 0){
-            habits = TimeService.updateHabitDaily(habits, today);
+          if(!response){
+            habits = LocalStorageService.getAllHabitsData() || [];  
+            if(habits.length > 0){
+              habits = TimeService.updateHabitDaily(habits, today);
+            }
+            LocalStorageService.setAllHabitsData(habits);
+            todayHabits = LocalStorageService.getHabits();
+            todayHabits = addLastWeekStreak(todayHabits);
+            habitApp.habits = todayHabits;
+          } else {
+            habits = response.data.habits || [];
+            LocalStorageService.setAllHabitsData(habits);
+            if(habits.length > 0){
+              habits = TimeService.updateHabitDaily(habits, today);
+            }
+            todayHabits = LocalStorageService.getTodayHabits(habits);
+            todayHabits = addLastWeekStreak(todayHabits);
+            habitApp.habits = todayHabits;
           }
-          todayHabits = LocalStorageService.getTodayHabits(habits);
-          todayHabits = addLastWeekStreak(todayHabits);
-          habitApp.habits = todayHabits;
-        }, function (response){
-          habits = LocalStorageService.getAllHabitsData() || [];  
-          if(habits.length > 0){
-            habits = TimeService.updateHabitDaily(habits, today);
-          }
-          LocalStorageService.setAllHabitsData(habits);
-          todayHabits = LocalStorageService.getHabits();
-          todayHabits = addLastWeekStreak(todayHabits);
-          habitApp.habits = todayHabits;
         });  
       }
     }

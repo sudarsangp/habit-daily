@@ -25,8 +25,7 @@ angular
       return {
         responseError: function(rejection) {
           if(rejection.status <= 0) {
-              console.log('api is offline');
-              return;
+              return false;
           }
           return $q.reject(rejection);
         }
