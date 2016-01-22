@@ -42,7 +42,7 @@ def crossdomain(origin=None, methods=None, headers=None,
                 return resp
 
             h = resp.headers
-
+            print origin
             h['Access-Control-Allow-Origin'] = origin
             h['Access-Control-Allow-Methods'] = get_methods()
             h['Access-Control-Max-Age'] = str(max_age)
@@ -54,7 +54,7 @@ def crossdomain(origin=None, methods=None, headers=None,
         return update_wrapper(wrapped_function, f)
     return decorator
 
-api.decorators = [crossdomain(origin='*')]
+api.decorators = [crossdomain(origin='*', headers=['Content-Type'])]
 
 status_fields = {
 	'started': fields.Integer,
@@ -105,9 +105,12 @@ class HabitListAPI(Resource):
 			if max_id < int(mapper.habitId):
 				max_id = int(mapper.habitId)
 		id_value = max_id + 1 if max_id > 0 else 1
-		habit['id'] = id_value
+		format_habit['id'] = id_value
 		mapper_habit = HabitMapper(habitId = int(id_value), objectId = str(db_habit.id)).save()
 		return {'task': marshal(format_habit, habit_fields)}, 201
+
+	def options(self):
+		return True
 
 class HabitAPI(Resource):
 	def __init__(self):
@@ -153,6 +156,9 @@ class HabitAPI(Resource):
 		
 		db_habit.delete()
 		return {'result': True}
+
+	def options(self):
+		return True
 
 api.add_resource(HabitListAPI, '/habitdaily/api/v1.0/habits', endpoint='habits')
 api.add_resource(HabitAPI, '/habitdaily/api/v1.0/habits/<int:id>', endpoint='habit')

@@ -20,8 +20,8 @@ angular.module('codeApp')
 			return $http.put('http://127.0.0.1:8000/habitdaily/api/v1.0/habits/' + uri, habitData);
 		}
 
-		function deleteHabit(habitData, uri){
-			return $http.delete('http://127.0.0.1:8000/habitdaily/api/v1.0/habits/' + uri, habitData);
+		function deleteHabit(uri){
+			return $http.delete('http://127.0.0.1:8000/habitdaily/api/v1.0/habits/' + uri);
 		}
 
 		function getHabit(uri){

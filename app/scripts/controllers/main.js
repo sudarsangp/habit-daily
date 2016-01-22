@@ -70,11 +70,21 @@ angular.module('codeApp')
         var habit = new Habit();
         habit.name = habitName;
         habitApp.habitName = '';
-        console.log(habit.requestBody());
+
         DbHabitService.createHabit(habit.requestBody()).then(function(response){
-          console.log(response);
+          if(!response){
+            LocalStorageService.addHabit(habit);
+          } else {
+            habit.id = response.data.task.id;
+          }
+          $mdToast.show(
+            $mdToast.simple()
+              .textContent('created \"' + habit.name + '\" habit')
+              .position(habitApp.defaultToastPosition)
+              .hideDelay(habitApp.defaultToastDisplayTime)
+          );
         });
-        LocalStorageService.addHabit(habit);
+        
         habit.lastWeekStreak = lastWeekHabitStreak(habit);
         habitApp.habits.push(habit);
       }
@@ -82,8 +92,19 @@ angular.module('codeApp')
 
     function removeHabit(position) {
       if($window.confirm('habitApp action will delete habitApp habit')){
-        LocalStorageService.removeHabit(position);
-        habitApp.habits.splice(position, 1);
+
+        DbHabitService.deleteHabit(habitApp.habits[position].id).then(function(response){
+          if(!response){
+            LocalStorageService.removeHabit(position);
+          }
+          $mdToast.show(
+            $mdToast.simple()
+              .textContent('deleted \"' + habitApp.habits[position].name + '\" habit')
+              .position(habitApp.defaultToastPosition)
+              .hideDelay(habitApp.defaultToastDisplayTime)
+          );
+           habitApp.habits.splice(position, 1);
+        });
       }
     }
 
