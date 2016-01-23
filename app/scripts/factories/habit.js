@@ -33,10 +33,10 @@ angular.module('codeApp')
 			habit.id = habitData.id;
 			habit.name = habitData.name;
       habit.streak = habitData.streak;
-      habit.created = habitData.created;
-      habit.status = habitData.status;
-      habit.state = habitData.state;
-      habit.current = habitData.current;
+      habit.created = moment(habitData.created).toDate();
+      habit.status = habitData.status[habitData.status.length - 1];
+      habit.state = habitData.state[habitData.state.length - 1];
+      habit.current = habitData.current[habitData.current.length - 1];
       habit.uri = habitData.uri;
 
 			return habit;

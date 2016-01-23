@@ -75,7 +75,8 @@ angular.module('codeApp')
           if(!response){
             LocalStorageService.addHabit(habit);
           } else {
-            habit.id = response.data.task.id;
+            habit = Habit.build(response.data.habit);
+            console.log(habit);
           }
           $mdToast.show(
             $mdToast.simple()
@@ -83,16 +84,17 @@ angular.module('codeApp')
               .position(habitApp.defaultToastPosition)
               .hideDelay(habitApp.defaultToastDisplayTime)
           );
+          habit.lastWeekStreak = lastWeekHabitStreak(habit);
+          habitApp.habits.push(habit);
         });
         
-        habit.lastWeekStreak = lastWeekHabitStreak(habit);
-        habitApp.habits.push(habit);
+        
       }
     }
 
     function removeHabit(position) {
       if($window.confirm('habitApp action will delete habitApp habit')){
-
+        console.log(habitApp.habits[position].id);
         DbHabitService.deleteHabit(habitApp.habits[position].id).then(function(response){
           if(!response){
             LocalStorageService.removeHabit(position);
@@ -115,9 +117,10 @@ angular.module('codeApp')
         LocalStorageService.modifyHabit(position, habitApp.habits[position]);
       } 
       else{
-        // DbHabitService.updateHabit(habitApp.habits[position]).then(function (response){
-        //   console.log(response);
-        // });
+        console.log(habitApp.habits[position]);
+        DbHabitService.updateHabit(habitApp.habits[position].requestBody()).then(function (response){
+          console.log(response);
+        });
       }
       $mdToast.show(
         $mdToast.simple()

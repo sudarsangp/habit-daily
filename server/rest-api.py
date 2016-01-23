@@ -107,7 +107,7 @@ class HabitListAPI(Resource):
 		id_value = max_id + 1 if max_id > 0 else 1
 		format_habit['id'] = id_value
 		mapper_habit = HabitMapper(habitId = int(id_value), objectId = str(db_habit.id)).save()
-		return {'task': marshal(format_habit, habit_fields)}, 201
+		return {'habit': marshal(format_habit, habit_fields)}, 201
 
 	def options(self):
 		return True
@@ -212,4 +212,4 @@ class HabitMapper(Document):
 	objectId = StringField()
 	habitId = IntField()
 
-app.run(host='127.0.0.1', port=8000, debug=True)
+app.run(host='127.0.0.1', port=8000, debug=True, threaded=True)
