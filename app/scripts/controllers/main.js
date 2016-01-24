@@ -111,15 +111,17 @@ angular.module('codeApp')
     }
 
     function beginHabit(position) {
-      habitApp.habits[position].status.started = new Date();
-      habitApp.habits[position].state = habitApp.habitState.STARTED;
+      
       if(!$window.navigator.onLine) {
         LocalStorageService.modifyHabit(position, habitApp.habits[position]);
       } 
       else{
+        habitApp.habits[position].status.started = new Date();
+        habitApp.habits[position].state = habitApp.habitState.STARTED;
         console.log(habitApp.habits[position]);
-        DbHabitService.updateHabit(habitApp.habits[position].requestBody()).then(function (response){
+        DbHabitService.updateHabit(habitApp.habits[position].requestBody(), habitApp.habits[position].id).then(function (response){
           console.log(response);
+          
         });
       }
       $mdToast.show(
@@ -142,9 +144,11 @@ angular.module('codeApp')
         LocalStorageService.modifyHabit(position, habitApp.habits[position]);
       } 
       else{
-        // DbHabitService.updateHabit(habitApp.habits[position]).then(function (response){
-        //   console.log(response);
-        // });
+        console.log(habitApp.habits[position]);
+        DbHabitService.updateHabit(habitApp.habits[position].requestBody(), habitApp.habits[position].id).then(function (response){
+          console.log(response);
+          
+        });
       }
       habitApp.habits[position].lastWeekStreak = lastWeekHabitStreak(habitApp.habits[position]);
       $mdToast.show(

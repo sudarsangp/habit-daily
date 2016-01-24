@@ -8,9 +8,9 @@ angular.module('codeApp')
 			this.name = '';
       this.streak = 0;
       this.created = new Date();
-      this.status = [{}];
-      this.state = [0];
-      this.current = [0];
+      this.status = {};
+      this.state = 0;
+      this.current = 0;
       this.uri = '';
 		}
 
@@ -19,9 +19,9 @@ angular.module('codeApp')
 				name : this.name,
 	      streak : this.streak,
 	      created : moment(this.created).unix(),
-	      status : statusToUnix(this.status),
-	      state : this.state,
-	      current : this.current
+	      status : [statusToUnix(this.status)],
+	      state : [this.state],
+	      current : [this.current]
 			};
 
 			return request;
@@ -43,18 +43,15 @@ angular.module('codeApp')
 		};
 
 		function statusToUnix(statusData){
-			var allStatus = [];
-			for(var i=0; i<statusData.length; i++){
-				var status = {};
-				if(typeof statusData.started !== 'undefined'){
-					status.started = moment(statusData.started).unix();
-				}
-				if(typeof statusData.finished !== 'undefined'){
-					status.finished = moment(statusData.finished).unix();
-				}
-				allStatus.push(status);
+			var status = {};
+			if(typeof statusData.started !== 'undefined'){
+				status.started = moment(statusData.started).unix();
 			}
-			return allStatus;
+			if(typeof statusData.finished !== 'undefined'){
+				status.finished = moment(statusData.finished).unix();
+			}
+			return status;
 		}
+
 		return Habit;
 	});
