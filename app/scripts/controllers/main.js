@@ -76,7 +76,6 @@ angular.module('codeApp')
             LocalStorageService.addHabit(habit);
           } else {
             habit = Habit.build(response.data.habit);
-            console.log(habit);
           }
           $mdToast.show(
             $mdToast.simple()
@@ -87,14 +86,13 @@ angular.module('codeApp')
           habit.lastWeekStreak = lastWeekHabitStreak(habit);
           habitApp.habits.push(habit);
         });
-        
-        
+
       }
     }
 
     function removeHabit(position) {
       if($window.confirm('habitApp action will delete habitApp habit')){
-        console.log(habitApp.habits[position].id);
+
         DbHabitService.deleteHabit(habitApp.habits[position].id).then(function(response){
           if(!response){
             LocalStorageService.removeHabit(position);
@@ -107,29 +105,26 @@ angular.module('codeApp')
           );
            habitApp.habits.splice(position, 1);
         });
+
       }
     }
 
     function beginHabit(position) {
-      
-      if(!$window.navigator.onLine) {
-        LocalStorageService.modifyHabit(position, habitApp.habits[position]);
-      } 
-      else{
-        habitApp.habits[position].status.started = new Date();
-        habitApp.habits[position].state = habitApp.habitState.STARTED;
-        console.log(habitApp.habits[position]);
-        DbHabitService.updateHabit(habitApp.habits[position].requestBody(), habitApp.habits[position].id).then(function (response){
-          console.log(response);
-          
-        });
-      }
-      $mdToast.show(
-        $mdToast.simple()
-          .textContent('congrats on starting \"' + habitApp.habits[position].name + '\" habit')
-          .position(habitApp.defaultToastPosition)
-          .hideDelay(habitApp.defaultToastDisplayTime)
-      );
+      habitApp.habits[position].status.started = new Date();
+      habitApp.habits[position].state = habitApp.habitState.STARTED;
+
+      DbHabitService.updateHabit(habitApp.habits[position].requestBody(), habitApp.habits[position].id).then(function (response){
+        if(!response){
+          LocalStorageService.modifyHabit(position, habitApp.habits[position]);
+        }
+        $mdToast.show(
+          $mdToast.simple()
+            .textContent('congrats on starting \"' + habitApp.habits[position].name + '\" habit')
+            .position(habitApp.defaultToastPosition)
+            .hideDelay(habitApp.defaultToastDisplayTime)
+        );
+      });
+
     }
 
     function finishHabit(position) {
@@ -140,23 +135,20 @@ angular.module('codeApp')
         habitApp.habits[position].status.started,
         habitApp.habits[position].status.finished));
       habitApp.habits[position].current = 1;
-      if(!$window.navigator.onLine) {
-        LocalStorageService.modifyHabit(position, habitApp.habits[position]);
-      } 
-      else{
-        console.log(habitApp.habits[position]);
+
         DbHabitService.updateHabit(habitApp.habits[position].requestBody(), habitApp.habits[position].id).then(function (response){
-          console.log(response);
-          
+          if(!response){
+            LocalStorageService.modifyHabit(position, habitApp.habits[position]);
+          }
+          $mdToast.show(
+            $mdToast.simple()
+              .textContent('congrats on finishing \"' + habitApp.habits[position].name + '\" habit')
+              .position(habitApp.defaultToastPosition)
+              .hideDelay(habitApp.defaultToastDisplayTime)
+          );
         });
-      }
+
       habitApp.habits[position].lastWeekStreak = lastWeekHabitStreak(habitApp.habits[position]);
-      $mdToast.show(
-        $mdToast.simple()
-          .textContent('congrats on finishing \"' + habitApp.habits[position].name + '\" habit')
-          .position(habitApp.defaultToastPosition)
-          .hideDelay(habitApp.defaultToastDisplayTime)
-      );
     }
 
     function initializeHabitsToday() {
@@ -187,13 +179,18 @@ angular.module('codeApp')
             habitApp.habits = todayHabits;
           } else {
             habits = response.data.habits || [];
-            LocalStorageService.setAllHabitsData(habits);
-            if(habits.length > 0){
-              habits = TimeService.updateHabitDaily(habits, today);
+            habitApp.habits = [];
+            for(var i=0; i<habits.length; i++){
+              habitApp.habits.push(Habit.build(habits[i]));
             }
-            todayHabits = LocalStorageService.getTodayHabits(habits);
-            todayHabits = addLastWeekStreak(todayHabits);
-            habitApp.habits = todayHabits;
+            // LocalStorageService.setAllHabitsData(habits);
+            // if(habits.length > 0){
+            //   habits = TimeService.updateHabitDaily(habits, today);
+            // }
+
+            // todayHabits = LocalStorageService.getTodayHabits(habits);
+            // todayHabits = addLastWeekStreak(todayHabits);
+            // habitApp.habits = todayHabits;
           }
         });  
       }

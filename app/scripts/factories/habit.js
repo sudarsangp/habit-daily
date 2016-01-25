@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('codeApp')
-	.factory('Habit', function(){
+	.factory('Habit', function (TimeService){
 
 		function Habit(){
 			this.id = 0;
@@ -33,8 +33,8 @@ angular.module('codeApp')
 			habit.id = habitData.id;
 			habit.name = habitData.name;
       habit.streak = habitData.streak;
-      habit.created = moment(habitData.created).toDate();
-      habit.status = habitData.status[habitData.status.length - 1];
+      habit.created = moment(habitData.created * 1000).toDate();
+      habit.status = statusToTime(habitData.status[habitData.status.length - 1]);
       habit.state = habitData.state[habitData.state.length - 1];
       habit.current = habitData.current[habitData.current.length - 1];
       habit.uri = habitData.uri;
@@ -49,6 +49,18 @@ angular.module('codeApp')
 			}
 			if(typeof statusData.finished !== 'undefined'){
 				status.finished = moment(statusData.finished).unix();
+			}
+			return status;
+		}
+
+		function statusToTime(statusData){
+			var status = {};
+			if(typeof statusData.started !== 'undefined'){
+				status.started = moment(statusData.started * 1000).toDate();
+			}
+			if(typeof statusData.finished !== 'undefined'){
+				status.finished = moment(statusData.finished * 1000).toDate();
+				status.timeDifference = TimeService.formatTime(TimeService.calculateTimeDifference(status.started, status.finished));
 			}
 			return status;
 		}
