@@ -28,16 +28,28 @@ angular.module('codeApp')
 		};
 
 		Habit.build = function(habitData){
+			var today = new Date();
 			var habit = new Habit();
 
 			habit.id = habitData.id;
+			habit.uri = habitData.uri;
 			habit.name = habitData.name;
       habit.streak = habitData.streak;
       habit.created = moment(habitData.created * 1000).toDate();
-      habit.status = statusToTime(habitData.status[habitData.status.length - 1]);
-      habit.state = habitData.state[habitData.state.length - 1];
-      habit.current = habitData.current[habitData.current.length - 1];
-      habit.uri = habitData.uri;
+
+      if(moment(habit.created).date() !== moment(today).date()){
+      	console.log(moment(habit.created).date());
+      	console.log(moment(today).date());
+        if(habit.status.length <= (moment(today).date() - moment(habit.created).date())) {
+          habit.status = {};
+          habit.current = 0;
+          habit.state = 0;
+        }
+      } else {
+	      habit.status = statusToTime(habitData.status[habitData.status.length - 1]);
+	      habit.state = habitData.state[habitData.state.length - 1];
+	      habit.current = habitData.current[habitData.current.length - 1];
+      }
 
 			return habit;
 		};

@@ -141,7 +141,10 @@ class HabitAPI(Resource):
 		args = self.reqparse.parse_args()
 		for k,v in args.items():
 			if v is not None:
-				db_habit[k] = v
+				if k in ['status', 'state', 'current']:
+					db_habit[k][len(db_habit[k]) - 1] = v[0]
+				else:
+					db_habit[k] = v
 		db_habit.save()
 
 		habit = HabitFormat().db_to_api(db_habit)
