@@ -215,4 +215,13 @@ class HabitMapper(Document):
 	objectId = StringField()
 	habitId = IntField()
 
+@app.route('/update/<int:habit_id>')
+def update_list(habit_id):
+	object_id = HabitFormat().get_object_id_from_habit_id(habit_id)
+	habit = HabitDaily.objects.get(id = object_id)
+	habit['status'].append({})
+	habit['state'].append(0)
+	habit['current'].append(0)
+	habit.save()
+	return str(habit_id)
 app.run(host='127.0.0.1', port=8000, debug=True, threaded=True)

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('codeApp')
-	.factory('Habit', function (TimeService){
+	.factory('Habit', function (TimeService, DbHabitService){
 
 		function Habit(){
 			this.id = 0;
@@ -38,9 +38,8 @@ angular.module('codeApp')
       habit.created = moment(habitData.created * 1000).toDate();
 
       if(moment(habit.created).date() !== moment(today).date()){
-      	console.log(moment(habit.created).date());
-      	console.log(moment(today).date());
         if(habit.status.length <= (moment(today).date() - moment(habit.created).date())) {
+        	DbHabitService.runOnceHabit(habit.id);
           habit.status = {};
           habit.current = 0;
           habit.state = 0;

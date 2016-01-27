@@ -7,6 +7,7 @@ angular.module('codeApp')
 		this.getHabit = getHabit;
 		this.updateHabit = updateHabit;
 		this.deleteHabit = deleteHabit;
+		this.runOnceHabit = runOnceHabit;
 		
 		function getAllHabitsData(){
 			return $http.get('http://127.0.0.1:8000/habitdaily/api/v1.0/habits', {timeout: 5000});
@@ -26,5 +27,9 @@ angular.module('codeApp')
 
 		function getHabit(uri){
 			return $http.get('http://127.0.0.1:8000/habitdaily/api/v1.0/habits/' + uri);
+		}
+
+		function runOnceHabit(id){
+			$http.get('http://127.0.0.1:8000/update/' + id)
 		}
 	});
