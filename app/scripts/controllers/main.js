@@ -183,14 +183,6 @@ angular.module('codeApp')
             for(var i=0; i<habits.length; i++){
               habitApp.habits.push(Habit.build(habits[i]));
             }
-            // LocalStorageService.setAllHabitsData(habits);
-            // if(habits.length > 0){
-            //   habits = TimeService.updateHabitDaily(habits, today);
-            // }
-
-            // todayHabits = LocalStorageService.getTodayHabits(habits);
-            // todayHabits = addLastWeekStreak(todayHabits);
-            // habitApp.habits = todayHabits;
           }
         });  
       }
