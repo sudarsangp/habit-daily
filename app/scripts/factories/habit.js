@@ -36,7 +36,9 @@ angular.module('codeApp')
 			habit.name = habitData.name;
       habit.streak = habitData.streak;
       habit.created = moment(habitData.created * 1000).toDate();
-
+      DbHabitService.habitNumbers(habit.id).then(function(response){
+      	console.log(response.data);
+      });
       if(moment(habit.created).date() !== moment(today).date()){
         if(habit.status.length <= (moment(today).date() - moment(habit.created).date())) {
         	DbHabitService.runOnceHabit(habit.id);

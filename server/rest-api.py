@@ -224,4 +224,12 @@ def update_list(habit_id):
 	habit['current'].append(0)
 	habit.save()
 	return str(habit_id)
+
+@app.route('/number/<int:habit_id>')
+@crossdomain(origin='*')
+def number_of_days(habit_id):
+	object_id = HabitFormat().get_object_id_from_habit_id(habit_id)
+	habit = HabitDaily.objects.get(id = object_id)
+	return str(len(habit['status']))
+
 app.run(host='127.0.0.1', port=8000, debug=True, threaded=True)
