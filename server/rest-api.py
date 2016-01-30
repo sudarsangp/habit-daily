@@ -1,4 +1,4 @@
-from flask import Flask, abort
+from flask import Flask, abort, jsonify
 from flask.ext.restful import Api, Resource, reqparse, fields, marshal
 from flask.ext.mongoengine import MongoEngine
 from mongoengine import Document, StringField, IntField, ListField, DictField
@@ -225,11 +225,13 @@ def update_list(habit_id):
 	habit.save()
 	return str(habit_id)
 
-@app.route('/number/<int:habit_id>')
+@app.route('/number/')
 @crossdomain(origin='*')
-def number_of_days(habit_id):
-	object_id = HabitFormat().get_object_id_from_habit_id(habit_id)
-	habit = HabitDaily.objects.get(id = object_id)
-	return str(len(habit['status']))
+def number_of_days():
+	number_len = [];
+	for habit in HabitDaily.objects:
+		habit_id = HabitFormat().get_habit_id_from_object_id(habit.id)
+		number_len.append({'id': habit_id, 'days': len(habit['status'])})
+	return jsonify({'number': number_len})
 
 app.run(host='127.0.0.1', port=8000, debug=True, threaded=True)

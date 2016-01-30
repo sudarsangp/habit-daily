@@ -180,9 +180,18 @@ angular.module('codeApp')
           } else {
             habits = response.data.habits || [];
             habitApp.habits = [];
-            for(var i=0; i<habits.length; i++){
-              habitApp.habits.push(Habit.build(habits[i]));
-            }
+            
+            DbHabitService.habitNumbers().then(function(response){
+              var habitNumbers = response.data.number;
+              for(var j=0; j<habitNumbers.length; j++){
+                for(var i=0; i<habits.length; i++){
+                  if(habits[i].id === habitNumbers[j].id){
+                    habitApp.habits.push(Habit.build(habits[i], habitNumbers[j].days));  
+                  }
+                }    
+              }
+            });
+
           }
         });  
       }

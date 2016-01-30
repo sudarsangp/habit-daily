@@ -34,7 +34,7 @@ angular.module('codeApp')
 			$http.get('http://127.0.0.1:8000/update/' + id);
 		}
 
-		function habitNumbers(id){
-			return $http.get('http://127.0.0.1:8000/number/' + id);
+		function habitNumbers(){
+			return $http.get('http://127.0.0.1:8000/number/');
 		}
 	});
