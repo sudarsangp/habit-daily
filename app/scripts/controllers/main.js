@@ -180,7 +180,7 @@ angular.module('codeApp')
           } else {
             habits = response.data.habits || [];
             habitApp.habits = [];
-            
+
             DbHabitService.habitNumbers().then(function(response){
               var habitNumbers = response.data.number;
               for(var j=0; j<habitNumbers.length; j++){

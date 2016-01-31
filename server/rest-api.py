@@ -216,6 +216,7 @@ class HabitMapper(Document):
 	habitId = IntField()
 
 @app.route('/update/<int:habit_id>')
+@crossdomain(origin='*')
 def update_list(habit_id):
 	object_id = HabitFormat().get_object_id_from_habit_id(habit_id)
 	habit = HabitDaily.objects.get(id = object_id)

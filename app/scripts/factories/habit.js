@@ -43,8 +43,19 @@ angular.module('codeApp')
           habit.current = 0;
           habit.state = 0;
         }
+        else {
+        	habit.status = statusToTime(habitData.status[habitData.status.length - 1]);
+		      habit.status.timeDifference = TimeService.formatTime(TimeService.calculateTimeDifference(
+	        	habit.status.started * 1000,
+	        	habit.status.finished * 1000));
+		      habit.state = habitData.state[habitData.state.length - 1];
+		      habit.current = habitData.current[habitData.current.length - 1];
+        }
       } else {
 	      habit.status = statusToTime(habitData.status[habitData.status.length - 1]);
+	      habit.status.timeDifference = TimeService.formatTime(TimeService.calculateTimeDifference(
+        	habit.status.started * 1000,
+        	habit.status.finished * 1000));
 	      habit.state = habitData.state[habitData.state.length - 1];
 	      habit.current = habitData.current[habitData.current.length - 1];
       }
