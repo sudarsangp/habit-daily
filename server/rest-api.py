@@ -158,6 +158,7 @@ class HabitAPI(Resource):
 			abort(404)
 		
 		db_habit.delete()
+		HabitMapper.objects.get(habitId = id).delete()
 		return {'result': True}
 
 	def options(self):
@@ -218,6 +219,7 @@ class HabitMapper(Document):
 @app.route('/update/<int:habit_id>')
 @crossdomain(origin='*')
 def update_list(habit_id):
+	print 'update check'
 	object_id = HabitFormat().get_object_id_from_habit_id(habit_id)
 	habit = HabitDaily.objects.get(id = object_id)
 	habit['status'].append({})
