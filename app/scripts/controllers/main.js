@@ -44,9 +44,10 @@ angular.module('codeApp')
         if(newValue){
           DbHabitService.getAllHabitsData().then(function (response){
             habits = response.data.habits || [];
-            if(habits.length > 0){
-              habits = TimeService.updateHabitDaily(habits, today);
-            }
+            // if(habits.length > 0){
+            //   habits = TimeService.updateHabitDaily(habits, today);
+            // }
+            LocalStorageService.setAllHabitsData(habits);
             todayHabits = LocalStorageService.getTodayHabits(habits);
             todayHabits = addLastWeekStreak(todayHabits);
             habitApp.habits = todayHabits;
@@ -54,10 +55,9 @@ angular.module('codeApp')
         }
         else {
           habits = LocalStorageService.getAllHabitsData() || [];  
-          if(habits.length > 0){
-            habits = TimeService.updateHabitDaily(habits, today);
-          }
-          LocalStorageService.setAllHabitsData(habits);
+          // if(habits.length > 0){
+          //   habits = TimeService.updateHabitDaily(habits, today);
+          // }
           todayHabits = LocalStorageService.getHabits();
           todayHabits = addLastWeekStreak(todayHabits);
           habitApp.habits = todayHabits;
@@ -158,9 +158,9 @@ angular.module('codeApp')
       
       if(!$window.navigator.onLine) {
         habits = LocalStorageService.getAllHabitsData() || [];  
-        if(habits.length > 0){
-          habits = TimeService.updateHabitDaily(habits, today);
-        }
+        // if(habits.length > 0){
+        //   habits = TimeService.updateHabitDaily(habits, today);
+        // }
         LocalStorageService.setAllHabitsData(habits);
         todayHabits = LocalStorageService.getHabits();
         todayHabits = addLastWeekStreak(todayHabits);
@@ -170,9 +170,9 @@ angular.module('codeApp')
         DbHabitService.getAllHabitsData().then(function (response){
           if(!response){
             habits = LocalStorageService.getAllHabitsData() || [];  
-            if(habits.length > 0){
-              habits = TimeService.updateHabitDaily(habits, today);
-            }
+            // if(habits.length > 0){
+            //   habits = TimeService.updateHabitDaily(habits, today);
+            // }
             LocalStorageService.setAllHabitsData(habits);
             todayHabits = LocalStorageService.getHabits();
             todayHabits = addLastWeekStreak(todayHabits);
