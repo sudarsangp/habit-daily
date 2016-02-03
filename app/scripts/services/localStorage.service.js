@@ -10,7 +10,11 @@ angular.module('codeApp')
 		this.setAllHabitsData = setAllHabitsData;
 		this.getTodayHabits = getTodayHabits;
 
+		this.getHabitNumbers = getHabitNumbers;
+		this.setHabitNumbers = setHabitNumbers;
+		
 		var habitsKey = 'dailyhabits';
+		var habitNumbers = 'habitNumbers';
 
 		function addHabit(habit){
 			if(habit === null){
@@ -69,6 +73,14 @@ angular.module('codeApp')
 
 		function setAllHabitsData(allHabitsData){
 			localStorageService.set(habitsKey, allHabitsData);
+		}
+
+		function getHabitNumbers(){
+			return localStorageService.get(habitNumbers);
+		}
+
+		function setHabitNumbers(numbers){
+			localStorageService.set(habitNumbers, numbers);
 		}
 
 		function formatHabitForStorage(habit){

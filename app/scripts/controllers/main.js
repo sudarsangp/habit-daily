@@ -39,28 +39,43 @@ angular.module('codeApp')
     $scope.$watch('online', function(newValue, oldValue){
       if(newValue !== oldValue){
         var habits;
+        var habitNumbers;
         var today = moment().local();
         var todayHabits;
         if(newValue){
           DbHabitService.getAllHabitsData().then(function (response){
             habits = response.data.habits || [];
+            LocalStorageService.setAllHabitsData(habits);
+            DbHabitService.habitNumbers().then(function(response){
+              var habitNumbers = response.data.number;
+              LocalStorageService.setHabitNumbers(habitNumbers);
+              for(var j=0; j<habitNumbers.length; j++){
+                for(var i=0; i<habits.length; i++){
+                  if(habits[i].id === habitNumbers[j].id && habitApp.habits[i].id !== habits[i].id){
+                    habitApp.habits.push(Habit.build(habits[i], habitNumbers[j].days));  
+                  }
+                }    
+              }
+            });
             // if(habits.length > 0){
             //   habits = TimeService.updateHabitDaily(habits, today);
             // }
-            LocalStorageService.setAllHabitsData(habits);
-            todayHabits = LocalStorageService.getTodayHabits(habits);
-            todayHabits = addLastWeekStreak(todayHabits);
-            habitApp.habits = todayHabits;
+            // LocalStorageService.setAllHabitsData(habits);
+            // todayHabits = LocalStorageService.getTodayHabits(habits);
+            // // todayHabits = addLastWeekStreak(todayHabits);
+            // habitApp.habits = todayHabits;
           });
         }
         else {
           habits = LocalStorageService.getAllHabitsData() || [];  
-          // if(habits.length > 0){
-          //   habits = TimeService.updateHabitDaily(habits, today);
-          // }
-          todayHabits = LocalStorageService.getHabits();
-          todayHabits = addLastWeekStreak(todayHabits);
-          habitApp.habits = todayHabits;
+          habitNumbers = LocalStorageService.getHabitNumbers();
+          for(var j=0; j<habitNumbers.length; j++){
+            for(var i=0; i<habits.length; i++){
+              if(habits[i].id === habitNumbers[j].id && habitApp.habits[i].id !== habits[i].id){
+                habitApp.habits.push(Habit.build(habits[i], habitNumbers[j].days));  
+              }
+            }    
+          }
         }
       }
     });
@@ -163,7 +178,7 @@ angular.module('codeApp')
         // }
         LocalStorageService.setAllHabitsData(habits);
         todayHabits = LocalStorageService.getHabits();
-        todayHabits = addLastWeekStreak(todayHabits);
+        // todayHabits = addLastWeekStreak(todayHabits);
         habitApp.habits = todayHabits;
       } 
       else {
@@ -175,14 +190,15 @@ angular.module('codeApp')
             // }
             LocalStorageService.setAllHabitsData(habits);
             todayHabits = LocalStorageService.getHabits();
-            todayHabits = addLastWeekStreak(todayHabits);
+            // todayHabits = addLastWeekStreak(todayHabits);
             habitApp.habits = todayHabits;
           } else {
             habits = response.data.habits || [];
             habitApp.habits = [];
-
+            LocalStorageService.setAllHabitsData(habits);
             DbHabitService.habitNumbers().then(function(response){
               var habitNumbers = response.data.number;
+              LocalStorageService.setHabitNumbers(habitNumbers);
               for(var j=0; j<habitNumbers.length; j++){
                 for(var i=0; i<habits.length; i++){
                   if(habits[i].id === habitNumbers[j].id){
