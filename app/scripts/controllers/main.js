@@ -57,13 +57,6 @@ angular.module('codeApp')
                 }    
               }
             });
-            // if(habits.length > 0){
-            //   habits = TimeService.updateHabitDaily(habits, today);
-            // }
-            // LocalStorageService.setAllHabitsData(habits);
-            // todayHabits = LocalStorageService.getTodayHabits(habits);
-            // // todayHabits = addLastWeekStreak(todayHabits);
-            // habitApp.habits = todayHabits;
           });
         }
         else {
@@ -98,7 +91,7 @@ angular.module('codeApp')
               .position(habitApp.defaultToastPosition)
               .hideDelay(habitApp.defaultToastDisplayTime)
           );
-          habit.lastWeekStreak = lastWeekHabitStreak(habit);
+          // habit.lastWeekStreak = lastWeekHabitStreak(habit);
           habitApp.habits.push(habit);
         });
 
@@ -163,41 +156,60 @@ angular.module('codeApp')
           );
         });
 
-      habitApp.habits[position].lastWeekStreak = lastWeekHabitStreak(habitApp.habits[position]);
+      // habitApp.habits[position].lastWeekStreak = lastWeekHabitStreak(habitApp.habits[position]);
     }
 
     function initializeHabitsToday() {
       var habits;
       var today = moment().local();
       var todayHabits;
-      
+      var habitNumbers = [];
+      var isEmptyInitial = true;
+      habitApp.habits = [];
+
       if(!$window.navigator.onLine) {
         habits = LocalStorageService.getAllHabitsData() || [];  
-        // if(habits.length > 0){
-        //   habits = TimeService.updateHabitDaily(habits, today);
-        // }
-        LocalStorageService.setAllHabitsData(habits);
-        todayHabits = LocalStorageService.getHabits();
-        // todayHabits = addLastWeekStreak(todayHabits);
-        habitApp.habits = todayHabits;
+        habitNumbers = LocalStorageService.getHabitNumbers();
+        for(var j=0; j<habitNumbers.length; j++){
+          for(var i=0; i<habits.length; i++){
+            if(isEmptyInitial){
+              if(habits[i].id === habitNumbers[j].id){
+                habitApp.habits.push(Habit.build(habits[i], habitNumbers[j].days));  
+              }
+            }
+            else {
+              if(habits[i].id === habitNumbers[j].id && habitApp.habits[i].id !== habits[i].id){
+                habitApp.habits.push(Habit.build(habits[i], habitNumbers[j].days));  
+              }
+            }
+          }    
+        }
       } 
       else {
         DbHabitService.getAllHabitsData().then(function (response){
           if(!response){
             habits = LocalStorageService.getAllHabitsData() || [];  
-            // if(habits.length > 0){
-            //   habits = TimeService.updateHabitDaily(habits, today);
-            // }
-            LocalStorageService.setAllHabitsData(habits);
-            todayHabits = LocalStorageService.getHabits();
-            // todayHabits = addLastWeekStreak(todayHabits);
-            habitApp.habits = todayHabits;
-          } else {
+            habitNumbers = LocalStorageService.getHabitNumbers();
+            for(var j=0; j<habitNumbers.length; j++){
+              for(var i=0; i<habits.length; i++){
+                if(isEmptyInitial){
+                  if(habits[i].id === habitNumbers[j].id){
+                    habitApp.habits.push(Habit.build(habits[i], habitNumbers[j].days));  
+                  }
+                }
+                else {
+                  if(habits[i].id === habitNumbers[j].id && habitApp.habits[i].id !== habits[i].id){
+                    habitApp.habits.push(Habit.build(habits[i], habitNumbers[j].days));  
+                  }
+                }
+              }    
+            }
+          } 
+          else {
             habits = response.data.habits || [];
-            habitApp.habits = [];
             LocalStorageService.setAllHabitsData(habits);
             DbHabitService.habitNumbers().then(function(response){
-              var habitNumbers = response.data.number;
+              habitNumbers = response.data.number;
               LocalStorageService.setHabitNumbers(habitNumbers);
               for(var j=0; j<habitNumbers.length; j++){
                 for(var i=0; i<habits.length; i++){
@@ -207,7 +219,6 @@ angular.module('codeApp')
                 }    
               }
             });
-
           }
         });  
       }
