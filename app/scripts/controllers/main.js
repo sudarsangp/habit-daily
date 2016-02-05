@@ -84,6 +84,7 @@ angular.module('codeApp')
             LocalStorageService.addHabit(habit);
           } else {
             habit = Habit.build(response.data.habit);
+            LocalStorageService.addHabit(habit);
           }
           $mdToast.show(
             $mdToast.simple()
@@ -103,6 +104,8 @@ angular.module('codeApp')
 
         DbHabitService.deleteHabit(habitApp.habits[position].id).then(function(response){
           if(!response){
+            LocalStorageService.removeHabit(position);
+          } else {
             LocalStorageService.removeHabit(position);
           }
           $mdToast.show(

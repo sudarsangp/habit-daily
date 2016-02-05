@@ -87,11 +87,22 @@ angular.module('codeApp')
 			var formatHabit = {
         'name': habit.name,
         'streak': habit.streak,
-        'created': habit.created,
-        'status': [habit.status],
+        'created': moment(habit.created).unix(),
+        'status': [statusToUnix(habit.status)],
         'state': [habit.state],
         'current': [habit.current]
       };
       return formatHabit;
+		}
+
+		function statusToUnix(statusData){
+			var status = {};
+			if(typeof statusData.started !== 'undefined'){
+				status.started = moment(statusData.started).unix();
+			}
+			if(typeof statusData.finished !== 'undefined'){
+				status.finished = moment(statusData.finished).unix();
+			}
+			return status;
 		}
 	});
