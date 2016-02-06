@@ -10,6 +10,8 @@ angular.module('codeApp')
   .controller('MainCtrl', function ($scope, $window, TimeService, LocalStorageService, $mdToast, $uibModal, DbHabitService, Habit) {
     var habitApp = this;
 
+    var localHabitData = [];
+
     habitApp.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
@@ -26,6 +28,7 @@ angular.module('codeApp')
     habitApp.showPencil = false;
     habitApp.disableAddButton = true;
     habitApp.today = moment().local().format('dddd[,] Do MMMM YYYY');
+
     habitApp.addHabit = addHabit;
     habitApp.removeHabit = removeHabit;
     habitApp.beginHabit = beginHabit;
@@ -36,7 +39,9 @@ angular.module('codeApp')
     habitApp.toolTipStreakText = toolTipStreakText;
     habitApp.toolTipLastWeekText = toolTipLastWeekText;
 
-    $scope.$watch('online', function(newValue, oldValue){
+    $scope.isEndpointAlive = false;
+
+    $scope.$watch('online', function (newValue, oldValue){
       if(newValue !== oldValue){
         var habits;
         var habitNumbers;
@@ -70,6 +75,12 @@ angular.module('codeApp')
             }    
           }
         }
+      }
+    });
+    
+    $scope.$watch('isEndpointAlive', function (newValue, oldValue){
+      if(newValue !== oldValue) {
+        localHabitData = LocalStorageService.getAllHabitsData();
       }
     });
 
@@ -147,17 +158,17 @@ angular.module('codeApp')
         habitApp.habits[position].status.finished));
       habitApp.habits[position].current = 1;
 
-        DbHabitService.updateHabit(habitApp.habits[position].requestBody(), habitApp.habits[position].id).then(function (response){
-          if(!response){
-            LocalStorageService.modifyHabit(position, habitApp.habits[position]);
-          }
-          $mdToast.show(
-            $mdToast.simple()
-              .textContent('congrats on finishing \"' + habitApp.habits[position].name + '\" habit')
-              .position(habitApp.defaultToastPosition)
-              .hideDelay(habitApp.defaultToastDisplayTime)
-          );
-        });
+      DbHabitService.updateHabit(habitApp.habits[position].requestBody(), habitApp.habits[position].id).then(function (response){
+        if(!response){
+          LocalStorageService.modifyHabit(position, habitApp.habits[position]);
+        }
+        $mdToast.show(
+          $mdToast.simple()
+            .textContent('congrats on finishing \"' + habitApp.habits[position].name + '\" habit')
+            .position(habitApp.defaultToastPosition)
+            .hideDelay(habitApp.defaultToastDisplayTime)
+        );
+      });
 
       // habitApp.habits[position].lastWeekStreak = lastWeekHabitStreak(habitApp.habits[position]);
     }
@@ -207,7 +218,8 @@ angular.module('codeApp')
                 }
               }    
             }
-          } 
+            $scope.isEndpointAlive = false;
+          }
           else {
             habits = response.data.habits || [];
             LocalStorageService.setAllHabitsData(habits);
@@ -222,6 +234,7 @@ angular.module('codeApp')
                 }    
               }
             });
+            $scope.isEndpointAlive = true;
           }
         });  
       }

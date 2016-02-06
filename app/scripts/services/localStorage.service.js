@@ -36,7 +36,7 @@ angular.module('codeApp')
 			var index = currentHabitList[position].status.length - 1;
 			currentHabitList[position].name = habit.name;
 			currentHabitList[position].streak = habit.streak;
-			currentHabitList[position].status[index] = habit.status;
+			currentHabitList[position].status[index] = statusToUnix(habit.status);
 			currentHabitList[position].state[index] = habit.state;
 			currentHabitList[position].current[index] = habit.current;
 			localStorageService.set(habitsKey, currentHabitList);
