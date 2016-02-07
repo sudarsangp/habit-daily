@@ -81,6 +81,20 @@ angular.module('codeApp')
     $scope.$watch('isEndpointAlive', function (newValue, oldValue){
       if(newValue !== oldValue) {
         localHabitData = LocalStorageService.getAllHabitsData();
+        if(newValue) {
+          DbHabitService.getAllHabitsData().then(function (response){
+            var endpointHabits = response.data.habits;
+            for(var i=0; i<localHabitData.length; i++){
+              if(typeof localHabitData[i].id === 'undefined'){
+                var newHabit = Habit.build(localHabitData[i]);
+                DbHabitService.createHabit(newHabit.requestBody()).then(function (response){
+                  LocalStorageService.addHabit(response.data.habit);
+                  console.log(LocalStorageService.getAllHabitsData());
+                });
+              }
+            }
+          });
+        }
       }
     });
 
@@ -90,13 +104,15 @@ angular.module('codeApp')
         habit.name = habitName;
         habitApp.habitName = '';
 
-        DbHabitService.createHabit(habit.requestBody()).then(function(response){
+        DbHabitService.createHabit(habit.requestBody()).then(function (response){
+          LocalStorageService.addHabit(habit);
           if(!response){
-            LocalStorageService.addHabit(habit);
+            $scope.isEndpointAlive = false;
           } else {
             habit = Habit.build(response.data.habit);
-            LocalStorageService.addHabit(habit);
+            $scope.isEndpointAlive = true;
           }
+          
           $mdToast.show(
             $mdToast.simple()
               .textContent('created \"' + habit.name + '\" habit')
@@ -115,10 +131,11 @@ angular.module('codeApp')
 
         DbHabitService.deleteHabit(habitApp.habits[position].id).then(function(response){
           if(!response){
-            LocalStorageService.removeHabit(position);
+            $scope.isEndpointAlive = false;
           } else {
-            LocalStorageService.removeHabit(position);
+            $scope.isEndpointAlive = true;
           }
+          LocalStorageService.removeHabit(position);
           $mdToast.show(
             $mdToast.simple()
               .textContent('deleted \"' + habitApp.habits[position].name + '\" habit')
@@ -138,6 +155,9 @@ angular.module('codeApp')
       DbHabitService.updateHabit(habitApp.habits[position].requestBody(), habitApp.habits[position].id).then(function (response){
         if(!response){
           LocalStorageService.modifyHabit(position, habitApp.habits[position]);
+          $scope.isEndpointAlive = false;
+        } else {
+          $scope.isEndpointAlive = true;
         }
         $mdToast.show(
           $mdToast.simple()
@@ -161,6 +181,9 @@ angular.module('codeApp')
       DbHabitService.updateHabit(habitApp.habits[position].requestBody(), habitApp.habits[position].id).then(function (response){
         if(!response){
           LocalStorageService.modifyHabit(position, habitApp.habits[position]);
+          $scope.isEndpointAlive = false;
+        } else {
+          $scope.isEndpointAlive = true;
         }
         $mdToast.show(
           $mdToast.simple()
