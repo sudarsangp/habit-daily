@@ -9,10 +9,12 @@ angular.module('codeApp')
 		this.getAllHabitsData = getAllHabitsData;
 		this.setAllHabitsData = setAllHabitsData;
 		this.getTodayHabits = getTodayHabits;
+		this.updateHabitWithServerData = updateHabitWithServerData;
 
 		this.getHabitNumbers = getHabitNumbers;
 		this.setHabitNumbers = setHabitNumbers;
-		
+		this.removeHabitNumbers = removeHabitNumbers;
+
 		var habitsKey = 'dailyhabits';
 		var habitNumbers = 'habitNumbers';
 
@@ -39,6 +41,17 @@ angular.module('codeApp')
 			currentHabitList[position].status[index] = statusToUnix(habit.status);
 			currentHabitList[position].state[index] = habit.state;
 			currentHabitList[position].current[index] = habit.current;
+			localStorageService.set(habitsKey, currentHabitList);
+		}
+
+		function updateHabitWithServerData(habit){
+			var currentHabitList = localStorageService.get(habitsKey);
+			for(var i=0; i<currentHabitList.length; i++){
+				if(currentHabitList[i].name === habit.name){
+					currentHabitList[i].id = habit.id;
+					currentHabitList[i].uri = habit.uri;	
+				}
+			}
 			localStorageService.set(habitsKey, currentHabitList);
 		}
 
@@ -81,6 +94,12 @@ angular.module('codeApp')
 
 		function setHabitNumbers(numbers){
 			localStorageService.set(habitNumbers, numbers);
+		}
+
+		function removeHabitNumbers(position) {
+			var currentHabitNumbers = localStorageService.get(habitNumbers);
+			currentHabitNumbers.splice(position, 1);
+			localStorageService.set(habitNumbers, currentHabitNumbers);
 		}
 
 		function formatHabitForStorage(habit){
