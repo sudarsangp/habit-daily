@@ -7,16 +7,8 @@
  * to handle basic functionalities
  */
 angular.module('codeApp')
-  .controller('MainCtrl', function ($scope, $window, TimeService, LocalStorageService, $mdToast, $uibModal, DbHabitService, Habit) {
+  .controller('MainCtrl', function ($scope, $window, TimeService, LocalStorageService, $mdToast, $uibModal, DbHabitService, Habit, $timeout) {
     var habitApp = this;
-
-    var localHabitData = [];
-
-    habitApp.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
 
     habitApp.habitState = Object.freeze({
       CREATED: 0,
@@ -78,43 +70,48 @@ angular.module('codeApp')
       }
     });
     
-    $scope.$watch('isEndpointAlive', function (newValue, oldValue){
-      if(newValue !== oldValue) {
-        localHabitData = LocalStorageService.getAllHabitsData();
-        if(newValue) {
-          DbHabitService.getAllHabitsData().then(function (response){
-            var endpointHabits = response.data.habits;
-            for(var i=0; i<localHabitData.length; i++){
-              if(typeof localHabitData[i].id === 'undefined'){
-                var newHabit = Habit.build(localHabitData[i]);
-                DbHabitService.createHabit(newHabit.requestBody()).then(function (response){
-                  for(var j=0; j<habitApp.habits.length; j++){
-                    if(habitApp.habits[j].name === response.data.habit.name){
-                      habitApp.habits[j].id = response.data.habit.id;
-                      habitApp.habits[j].uri = response.data.habit.uri;
-                    }
-                  }
-                  LocalStorageService.updateHabitWithServerData(response.data.habit);
-                });
-              }
-            }
-          });
-        }
-      }
-    });
+    // $scope.$watch('isEndpointAlive', function (newValue, oldValue){
+      
+    //   if(newValue !== oldValue) {
+    //     if(newValue) {
+    //       DbHabitService.getAllHabitsData().then(function (response){
+    //         var endpointHabits = response.data.habits;
+    //         for(var i=0; i<habitApp.habits.length; i++){
+    //           if(typeof habitApp.habits[i].id === 'undefined'){
+    //             var newHabit = Habit.build(habitApp.habits[i]);
+    //             // not sure how to prevent the race condition while habits get created when server goes down and then up
+    //             DbHabitService.createHabit(newHabit.requestBody()).then(function (response){
+    //               for(var j=0; j<habitApp.habits.length; j++){
+    //                 if(habitApp.habits[j].name === response.data.habit.name){
+    //                   habitApp.habits[j].id = response.data.habit.id;
+    //                   habitApp.habits[j].uri = response.data.habit.uri;
+    //                 }
+    //               }
+    //               LocalStorageService.updateHabitWithServerData(response.data.habit);
+    //             });
+    //           }
+    //         }
+    //       });
+    //     }
+    //   }
+    
+    // });
 
     function addHabit(habitName) {
       if(habitName){
         var habit = new Habit();
         habit.name = habitName;
         habitApp.habitName = '';
-
         DbHabitService.createHabit(habit.requestBody()).then(function (response){
-          LocalStorageService.addHabit(habit);
           if(!response){
+            habitApp.habits.push(habit);
+            LocalStorageService.addHabit(habit);
             $scope.isEndpointAlive = false;
           } else {
             habit = Habit.build(response.data.habit);
+            habitApp.habits.push(habit);
+            console.log(habit);
+            LocalStorageService.addHabit(habit);
             $scope.isEndpointAlive = true;
           }
           
@@ -125,9 +122,8 @@ angular.module('codeApp')
               .hideDelay(habitApp.defaultToastDisplayTime)
           );
           // habit.lastWeekStreak = lastWeekHabitStreak(habit);
-          habitApp.habits.push(habit);
+          
         });
-
       }
     }
 
