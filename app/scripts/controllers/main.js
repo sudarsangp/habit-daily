@@ -179,7 +179,9 @@ angular.module('codeApp')
         habitApp.habits[position].status.started,
         habitApp.habits[position].status.finished));
       habitApp.habits[position].current = 1;
-
+      var streakLength = habitApp.habits[position].lastWeekStreak.length; 
+      habitApp.habits[position].lastWeekStreak[streakLength - 1] = 1;
+      
       DbHabitService.updateHabit(habitApp.habits[position].requestBody(), habitApp.habits[position].id).then(function (response){
         if(!response){
           LocalStorageService.modifyHabit(position, habitApp.habits[position]);
@@ -258,10 +260,21 @@ angular.module('codeApp')
                   }
                 }    
               }
+              DbHabitService.lastWeekStreak().then(function (response){
+                var streakData = response.data.lastweek
+                for(var i=0; i<streakData.length; i++){
+                  for(var j=0; j<habitApp.habits.length; j++){
+                    if(streakData[i].id === habitApp.habits[j].id){
+                      habitApp.habits[j].lastWeekStreak = streakData[i].streak;
+                    }
+                  }
+                }
+              });
             });
             $scope.isEndpointAlive = true;
           }
-        });  
+        });
+
       }
     }
 

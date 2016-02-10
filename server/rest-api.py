@@ -237,4 +237,13 @@ def number_of_days():
 		number_len.append({'id': habit_id, 'days': len(habit['status'])})
 	return jsonify({'number': number_len})
 
+@app.route('/lastweek/')
+@crossdomain(origin='*')
+def last_week_streak():
+	streak_habits = [];
+	for habit in HabitDaily.objects:
+		habit_id = HabitFormat().get_habit_id_from_object_id(habit.id)
+		streak_habits.append({'id': habit_id, 'streak': habit.current[-7:]})
+	return jsonify({'lastweek': streak_habits})
+
 app.run(host='127.0.0.1', port=8000, debug=True, threaded=True)
