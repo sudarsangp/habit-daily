@@ -1,8 +1,9 @@
-from flask import Flask, abort, jsonify
+from flask import Flask, abort, jsonify, g
 from flask.ext.restful import Api, Resource, reqparse, fields, marshal
 from flask.ext.mongoengine import MongoEngine
 from flask.ext.httpauth import HTTPBasicAuth
 from mongoengine import Document, StringField, IntField, ListField, DictField
+from passlib.apps import custom_app_context as pwd_context
 
 app = Flask(__name__)
 api = Api(app)
@@ -75,7 +76,6 @@ habit_fields = {
 }
 
 class HabitListAPI(Resource):
-
 	def __init__(self):
 		self.reqparse = reqparse.RequestParser()
 		self.reqparse.add_argument('name', type = str, required = True, location = 'json', help = 'No habit name provided')
@@ -219,17 +219,36 @@ class HabitMapper(Document):
 	objectId = StringField()
 	habitId = IntField()
 
-@auth.get_password
-def get_password(username):
-    if username == 'gps':
-        return 'gps'
-    return None
+class User(Document):
+	username = StringField()
+	password_hash = StringField()
 
-@auth.error_handler
-def unauthorized():
-    # return 403 instead of 401 to prevent browsers from displaying the default
-    # auth dialog
-    return make_response(jsonify({'message': 'Unauthorized access'}), 403)
+	def hash_password(self, password):
+		self.password_hash = pwd_context.encrypt(password)
+
+	def verify_password(self, password):
+		return pwd_context.verify(password, self.password_hash)
+
+@app.route('/api/users', methods = ['POST'])
+def new_user():
+	username = request.json.get('username')
+	password = request.json.get('password')
+	if username is None or password is None:
+		abort(400)
+	if User.objects(username = username):
+		abort(400)
+	user = User(username = username)
+	user.hash_password(password)
+	user.save()
+	return jsonify({'username': user.username}), 201
+
+@auth.verify_password
+def verify_password(username, password):
+	for user in User.objects:
+		if user.username == username and user.verify_password(password):
+			g.user = user
+			return True
+	return False
 
 @app.route('/update/<int:habit_id>')
 @crossdomain(origin='*')
