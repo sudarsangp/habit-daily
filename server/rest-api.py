@@ -1,11 +1,13 @@
 from flask import Flask, abort, jsonify
 from flask.ext.restful import Api, Resource, reqparse, fields, marshal
 from flask.ext.mongoengine import MongoEngine
+from flask.ext.httpauth import HTTPBasicAuth
 from mongoengine import Document, StringField, IntField, ListField, DictField
 
 app = Flask(__name__)
 api = Api(app)
 db = MongoEngine(app)
+auth = HTTPBasicAuth()
 
 from datetime import timedelta
 from flask import make_response, request, current_app
@@ -54,7 +56,7 @@ def crossdomain(origin=None, methods=None, headers=None,
         return update_wrapper(wrapped_function, f)
     return decorator
 
-api.decorators = [crossdomain(origin='*', headers=['Content-Type'])]
+api.decorators = [crossdomain(origin='*', headers=['Content-Type']), auth.login_required]
 
 status_fields = {
 	'started': fields.Integer,
@@ -73,6 +75,7 @@ habit_fields = {
 }
 
 class HabitListAPI(Resource):
+
 	def __init__(self):
 		self.reqparse = reqparse.RequestParser()
 		self.reqparse.add_argument('name', type = str, required = True, location = 'json', help = 'No habit name provided')
@@ -215,6 +218,18 @@ class HabitFormat:
 class HabitMapper(Document):
 	objectId = StringField()
 	habitId = IntField()
+
+@auth.get_password
+def get_password(username):
+    if username == 'gps':
+        return 'gps'
+    return None
+
+@auth.error_handler
+def unauthorized():
+    # return 403 instead of 401 to prevent browsers from displaying the default
+    # auth dialog
+    return make_response(jsonify({'message': 'Unauthorized access'}), 403)
 
 @app.route('/update/<int:habit_id>')
 @crossdomain(origin='*')
