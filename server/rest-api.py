@@ -263,12 +263,14 @@ def new_user():
 
 @auth.verify_password
 def verify_password(username, password):
-	user = User.verify_auth_token(username_or_token)
+	user = User.verify_auth_token(username)
 	if user:
 		g.user = user
 	else:
 		for user in User.objects:
+			print user.verify_password(password)
 			if user.username == username and user.verify_password(password):
+				print 'reached'
 				g.user = user
 				return True
 	return False
