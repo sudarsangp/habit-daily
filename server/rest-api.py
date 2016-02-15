@@ -234,18 +234,19 @@ class User(Document):
 
 	def generate_auth_token(self, expiration=600):
 		s = Serializer(app.config['SECRET_KEY'], expires_in = expiration)
-		return s.dumps({ 'id': self._id })
+		return s.dumps({ 'name': self.username })
 
 	@staticmethod
 	def verify_auth_token(token):
 		s = Serializer(app.config['SECRET_KEY'])
 		try:
 		  data = s.loads(token)
+		  print data
 		except SignatureExpired:
 		  return None    # valid token, but expired
 		except BadSignature:
 		  return None    # invalid token
-		user = User.objects(_id = data['_id'])
+		user = User.objects(_id = data['name'])
 		return user
 
 @app.route('/api/users', methods = ['POST'])
