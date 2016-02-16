@@ -10,6 +10,7 @@ angular.module('codeApp')
 		this.runOnceHabit = runOnceHabit;
 		this.habitNumbers = habitNumbers;
 		this.lastWeekStreak = lastWeekStreak;
+		this.signInUser = signInUser;
 
 		function getAllHabitsData(){
 			return $http.get('http://127.0.0.1:8000/habitdaily/api/v1.0/habits', {timeout: 5000});
@@ -41,5 +42,9 @@ angular.module('codeApp')
 
 		function lastWeekStreak(){
 			return $http.get('http://127.0.0.1:8000/lastweek/');
+		}
+
+		function signInUser(userData){
+			return $http.get('http://127.0.0.1:8000/api/token');
 		}
 	});

@@ -264,7 +264,9 @@ def new_user():
 def verify_password(username, password):
 	user = User.verify_auth_token(username)
 	if user:
+		print 'reached'
 		g.user = user
+		return True
 	else:
 		for user in User.objects:
 			if user.username == username and user.verify_password(password):
@@ -273,6 +275,7 @@ def verify_password(username, password):
 	return False
 
 @app.route('/api/token')
+@crossdomain(origin='*')
 @auth.login_required
 def get_auth_token():
   token = g.user.generate_auth_token()

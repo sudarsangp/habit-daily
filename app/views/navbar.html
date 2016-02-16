@@ -5,6 +5,29 @@
     	 <md-button>Habit Daily</md-button>
     </h2>
     <span flex></span>
-    <md-button ng-bind="navbar.today" aria-label="today's date"></md-button>
+    <md-button ng-if="!navbar.userLoggedIn" ng-click="navbar.openSignInModal()">Sign In</md-button>
+    <md-button ng-bind="navbar.today" aria-label="today's date" ng-if="navbar.userLoggedIn"></md-button>
   </div>
 </md-toolbar>
+
+<script type="text/ng-template" id="userSignIn.html">
+  <div class="modal-body">
+    <md-content layout-padding>
+      <form name='signInForm'>
+        <div layout-gt-sm="row">
+          <md-input-container class="md-block" flex-gt-sm>
+            <label>Username</label>
+            <input ng-model="username" required>
+          </md-input-container>
+          <md-input-container class="md-block" flex-gt-sm>
+            <label>Password</label>
+            <input ng-model="password" required>
+          </md-input-container>
+          <md-input-container>
+            <md-button class="md-raised md-primary" ng-click="signInUser(username, password)" ng-disabled="signInForm.$invalid">Sign In</md-button>
+          </md-input-container>
+        </div>
+      </form>
+    </md-content>
+  </div>
+</script>

@@ -98,6 +98,7 @@ angular.module('codeApp')
     // });
 
     function addHabit(habitName) {
+      openSignInModal();
       if(habitName){
         var habit = new Habit();
         habit.name = habitName;
