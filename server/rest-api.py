@@ -48,7 +48,6 @@ def crossdomain(origin=None, methods=None, headers=None,
                 return resp
 
             h = resp.headers
-            print origin
             h['Access-Control-Allow-Origin'] = origin
             h['Access-Control-Allow-Methods'] = get_methods()
             h['Access-Control-Max-Age'] = str(max_age)
@@ -241,12 +240,11 @@ class User(Document):
 		s = Serializer(app.config['SECRET_KEY'])
 		try:
 		  data = s.loads(token)
-		  print data
 		except SignatureExpired:
 		  return None    # valid token, but expired
 		except BadSignature:
 		  return None    # invalid token
-		user = User.objects(_id = data['name'])
+		user = User.objects(username = data['name'])
 		return user
 
 @app.route('/api/users', methods = ['POST'])
@@ -269,9 +267,7 @@ def verify_password(username, password):
 		g.user = user
 	else:
 		for user in User.objects:
-			print user.verify_password(password)
 			if user.username == username and user.verify_password(password):
-				print 'reached'
 				g.user = user
 				return True
 	return False
@@ -285,7 +281,6 @@ def get_auth_token():
 @app.route('/update/<int:habit_id>')
 @crossdomain(origin='*')
 def update_list(habit_id):
-	print 'update check'
 	object_id = HabitFormat().get_object_id_from_habit_id(habit_id)
 	habit = HabitDaily.objects.get(id = object_id)
 	habit['status'].append({})
