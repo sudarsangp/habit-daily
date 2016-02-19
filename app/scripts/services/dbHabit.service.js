@@ -44,7 +44,7 @@ angular.module('codeApp')
 			return $http.get('http://127.0.0.1:8000/lastweek/');
 		}
 
-		function signInUser(userData){
-			return $http.get('http://'+ userData.username + ':' + userData.password + '@127.0.0.1:8000/api/token');
+		function signInUser(){
+			return $http.get('http://127.0.0.1:8000/api/token');
 		}
 	});

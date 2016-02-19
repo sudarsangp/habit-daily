@@ -23,6 +23,10 @@ angular
   .config(function($httpProvider) {
     $httpProvider.interceptors.push(function($q) {
       return {
+        request: function(config) {
+          config.headers['Authorization'] = '';
+          return config;
+        },
         responseError: function(rejection) {
           if(rejection.status <= 0) {
               return false;

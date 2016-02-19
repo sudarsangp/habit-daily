@@ -14,8 +14,11 @@ angular.module('codeApp')
         controller: 'SignInModalCtrl'
       });
       modalInstance.result.then(function (data){
+        console.log(data);
         DbHabitService.signInUser(data).then(function (response){
           console.log(response);
+        }, function(){
+          console.log('error');
         });
       });
     }

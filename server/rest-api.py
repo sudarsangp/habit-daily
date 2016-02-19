@@ -59,7 +59,7 @@ def crossdomain(origin=None, methods=None, headers=None,
         return update_wrapper(wrapped_function, f)
     return decorator
 
-api.decorators = [crossdomain(origin='*', headers=['Content-Type']), auth.login_required]
+api.decorators = [crossdomain(origin='*', headers=['Content-Type', 'Authorization']), auth.login_required]
 
 status_fields = {
   'started': fields.Integer,
@@ -237,6 +237,7 @@ class User(Document):
 
   @staticmethod
   def verify_auth_token(token):
+    print token
     s = Serializer(app.config['SECRET_KEY'])
     try:
       data = s.loads(token)
@@ -263,7 +264,8 @@ def new_user():
 @auth.verify_password
 def verify_password(username, password):
   print 'called'
-  print username
+  if username == '':
+    username = request.headers.get('Authorization')
   user = User.verify_auth_token(username)
   if user:
     print 'reached'
@@ -277,7 +279,7 @@ def verify_password(username, password):
   return False
 
 @app.route('/api/token')
-@crossdomain(origin='*')
+@crossdomain(origin='*', headers=['Content-Type', 'Authorization'])
 @auth.login_required
 def get_auth_token():
   print 'reaching token method'
