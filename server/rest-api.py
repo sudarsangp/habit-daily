@@ -264,6 +264,7 @@ def new_user():
 @auth.verify_password
 def verify_password(username, password):
   print 'called'
+  print request.headers.get('Authorization')
   if username == '':
     username = request.headers.get('Authorization')
   user = User.verify_auth_token(username)

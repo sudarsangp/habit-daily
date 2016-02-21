@@ -44,9 +44,9 @@ angular.module('codeApp')
 			return $http.get('http://127.0.0.1:8000/lastweek/');
 		}
 
-		function signInUser(){
+		function signInUser(userData){
 			return $http.get('http://127.0.0.1:8000/api/token', {
-		    headers: {'Authorization': ' "eyJhbGciOiJIUzI1NiIsImV4cCI6MTQ1NTk4MzI0MiwiaWF0IjoxNDU1OTgyNjQyfQ.eyJuYW1lIjoibWlndWVsIn0.sHvcpzRRaAr8L94L6I6VUrDky2ltdzsjgDZ-FJqUJlA'}
+		    headers: {'Authorization': 'Basic ' + userData.username + ':' + userData.password}
 			});
 		}
 	});
