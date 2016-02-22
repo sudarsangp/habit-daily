@@ -264,9 +264,9 @@ def new_user():
 @auth.verify_password
 def verify_password(username, password):
   print 'called'
-  print request.headers.get('Authorization')
-  if username == '':
-    username = request.headers.get('Authorization')
+  auth_info = request.headers.get('Authorization')
+  username = auth_info.split(':')[0]
+  password = auth_info.split(':')[1]
   user = User.verify_auth_token(username)
   if user:
     print 'reached'
@@ -279,7 +279,7 @@ def verify_password(username, password):
         return True
   return False
 
-@app.route('/api/token')
+@app.route('/api/token',  methods = ['OPTIONS', 'GET'])
 @crossdomain(origin='*', headers=['Content-Type', 'Authorization'])
 @auth.login_required
 def get_auth_token():

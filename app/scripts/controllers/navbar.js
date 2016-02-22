@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('codeApp')
-	.controller('NavbarCtrl', function ($uibModal, DbHabitService){
+	.controller('NavbarCtrl', function ($uibModal, DbHabitService, $rootScope){
 		var navbar = this;
 		
 		navbar.userLoggedIn = false;
@@ -16,7 +16,7 @@ angular.module('codeApp')
       modalInstance.result.then(function (data){
         console.log(data);
         DbHabitService.signInUser(data).then(function (response){
-          console.log(response);
+          $rootScope.token = response.data.token;
         }, function(){
           console.log('error');
         });

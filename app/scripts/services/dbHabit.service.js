@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('codeApp')
-	.service('DbHabitService', function ($http){
+	.service('DbHabitService', function ($http, $rootScope){
 		this.getAllHabitsData = getAllHabitsData;
 		this.createHabit = createHabit;
 		this.getHabit = getHabit;
@@ -13,7 +13,9 @@ angular.module('codeApp')
 		this.signInUser = signInUser;
 
 		function getAllHabitsData(){
-			return $http.get('http://127.0.0.1:8000/habitdaily/api/v1.0/habits', {timeout: 5000});
+			return $http.get('http://127.0.0.1:8000/habitdaily/api/v1.0/habits', {
+				headers: {'Authorization':  $rootScope.token + ':'}
+			});
 		}
 
 		function createHabit(habitData){
@@ -46,7 +48,7 @@ angular.module('codeApp')
 
 		function signInUser(userData){
 			return $http.get('http://127.0.0.1:8000/api/token', {
-		    headers: {'Authorization': 'Basic ' + userData.username + ':' + userData.password}
+		    headers: {'Authorization':  userData.username + ':' + userData.password}
 			});
 		}
 	});

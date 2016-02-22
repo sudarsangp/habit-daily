@@ -70,6 +70,30 @@ angular.module('codeApp')
       }
     });
     
+    $scope.$watch('token', function (newValue, oldValue){
+      if(newValue !== oldValue){
+        var habits;
+        var habitNumbers;
+        var today = moment().local();
+        var todayHabits;
+        DbHabitService.getAllHabitsData().then(function (response){
+          habits = response.data.habits || [];
+          console.log(habits);
+          LocalStorageService.setAllHabitsData(habits);
+          DbHabitService.habitNumbers().then(function(response){
+            var habitNumbers = response.data.number;
+            LocalStorageService.setHabitNumbers(habitNumbers);
+            for(var j=0; j<habitNumbers.length; j++){
+              for(var i=0; i<habits.length; i++){
+                if(habits[i].id === habitNumbers[j].id && habitApp.habits[i].id !== habits[i].id){
+                  habitApp.habits.push(Habit.build(habits[i], habitNumbers[j].days));  
+                }
+              }
+            }
+          });
+        });
+      }
+    });
     // $scope.$watch('isEndpointAlive', function (newValue, oldValue){
       
     //   if(newValue !== oldValue) {
@@ -98,7 +122,6 @@ angular.module('codeApp')
     // });
 
     function addHabit(habitName) {
-      openSignInModal();
       if(habitName){
         var habit = new Habit();
         habit.name = habitName;
