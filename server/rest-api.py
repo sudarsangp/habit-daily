@@ -289,6 +289,7 @@ def get_auth_token():
 
 @app.route('/update/<int:habit_id>')
 @crossdomain(origin='*')
+@auth.login_required
 def update_list(habit_id):
   object_id = HabitFormat().get_object_id_from_habit_id(habit_id)
   habit = HabitDaily.objects.get(id = object_id)
@@ -300,6 +301,7 @@ def update_list(habit_id):
 
 @app.route('/number/')
 @crossdomain(origin='*')
+@auth.login_required
 def number_of_days():
   number_len = [];
   for habit in HabitDaily.objects:
@@ -309,6 +311,7 @@ def number_of_days():
 
 @app.route('/lastweek/')
 @crossdomain(origin='*')
+@auth.login_required
 def last_week_streak():
   streak_habits = [];
   for habit in HabitDaily.objects:

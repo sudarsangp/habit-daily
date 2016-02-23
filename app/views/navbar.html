@@ -17,11 +17,11 @@
         <div layout-gt-sm="row">
           <md-input-container class="md-block" flex-gt-sm>
             <label>Username</label>
-            <input ng-model="username" required>
+            <input type="text" ng-model="username" required>
           </md-input-container>
           <md-input-container class="md-block" flex-gt-sm>
             <label>Password</label>
-            <input ng-model="password" required>
+            <input type="password" ng-model="password" required>
           </md-input-container>
           <md-input-container>
             <md-button class="md-raised md-primary" ng-click="signInUser(username, password)" ng-disabled="signInForm.$invalid">Sign In</md-button>

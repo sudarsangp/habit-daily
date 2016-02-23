@@ -21,12 +21,15 @@ angular
   	localStorageServiceProvider.setPrefix('habit');
   })
   .config(function($httpProvider) {
-    $httpProvider.interceptors.push(function($q) {
+    $httpProvider.interceptors.push(function ($q, Token) {
       return {
-        // request: function(config) {
-        //   config.headers['Authorization'] = '';
-        //   return config;
-        // },
+        request: function(config) {
+          console.log(Token.getRefreshToken());
+          if(typeof Token.getRefreshToken() !== 'undefined'){
+            config.headers['Authorization'] = Token.getRefreshToken() + ':';
+          }
+          return config;
+        },
         responseError: function(rejection) {
           if(rejection.status <= 0) {
               return false;

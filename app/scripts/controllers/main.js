@@ -231,7 +231,7 @@ angular.module('codeApp')
       var habitNumbers = [];
       var isEmptyInitial = true;
       habitApp.habits = [];
-
+      
       if(!$window.navigator.onLine) {
         habits = LocalStorageService.getAllHabitsData() || [];  
         habitNumbers = LocalStorageService.getHabitNumbers();
