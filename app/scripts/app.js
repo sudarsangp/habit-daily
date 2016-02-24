@@ -24,7 +24,6 @@ angular
     $httpProvider.interceptors.push(function ($q, Token) {
       return {
         request: function(config) {
-          console.log(Token.getRefreshToken());
           if(typeof Token.getRefreshToken() !== 'undefined'){
             config.headers['Authorization'] = Token.getRefreshToken() + ':';
           }

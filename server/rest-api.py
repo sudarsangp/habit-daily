@@ -299,8 +299,8 @@ def update_list(habit_id):
   habit.save()
   return str(habit_id)
 
-@app.route('/number/')
-@crossdomain(origin='*')
+@app.route('/number/', methods = ['OPTIONS', 'GET'])
+@crossdomain(origin='*', headers=['Content-Type', 'Authorization'])
 @auth.login_required
 def number_of_days():
   number_len = [];

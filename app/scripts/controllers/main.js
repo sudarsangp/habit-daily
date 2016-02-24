@@ -7,7 +7,7 @@
  * to handle basic functionalities
  */
 angular.module('codeApp')
-  .controller('MainCtrl', function ($scope, $window, TimeService, LocalStorageService, $mdToast, $uibModal, DbHabitService, Habit, $timeout) {
+  .controller('MainCtrl', function ($scope, $window, TimeService, LocalStorageService, $mdToast, $uibModal, DbHabitService, Habit, $timeout, Token) {
     var habitApp = this;
 
     habitApp.habitState = Object.freeze({
@@ -232,7 +232,7 @@ angular.module('codeApp')
       var isEmptyInitial = true;
       habitApp.habits = [];
       
-      if(!$window.navigator.onLine) {
+      if(!$window.navigator.onLine || typeof Token.getRefreshToken() === 'undefined') {
         habits = LocalStorageService.getAllHabitsData() || [];  
         habitNumbers = LocalStorageService.getHabitNumbers();
         for(var j=0; j<habitNumbers.length; j++){
