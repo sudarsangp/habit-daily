@@ -126,73 +126,104 @@ angular.module('codeApp')
         var habit = new Habit();
         habit.name = habitName;
         habitApp.habitName = '';
-        DbHabitService.createHabit(habit.requestBody()).then(function (response){
-          if(!response){
-            habitApp.habits.push(habit);
-            LocalStorageService.addHabit(habit);
-            $scope.isEndpointAlive = false;
-          } else {
-            habit = Habit.build(response.data.habit);
-            habitApp.habits.push(habit);
-            console.log(habit);
-            LocalStorageService.addHabit(habit);
-            $scope.isEndpointAlive = true;
-          }
-          
+        if(typeof Token.getRefreshToken() === 'undefined'){
+          habitApp.habits.push(habit);
+          LocalStorageService.addHabit(habit);
           $mdToast.show(
             $mdToast.simple()
               .textContent('created \"' + habit.name + '\" habit')
               .position(habitApp.defaultToastPosition)
               .hideDelay(habitApp.defaultToastDisplayTime)
           );
-          // habit.lastWeekStreak = lastWeekHabitStreak(habit);
-          
-        });
+        }
+        else {
+          DbHabitService.createHabit(habit.requestBody()).then(function (response){
+            if(!response){
+              habitApp.habits.push(habit);
+              LocalStorageService.addHabit(habit);
+              $scope.isEndpointAlive = false;
+            } else {
+              habit = Habit.build(response.data.habit);
+              habitApp.habits.push(habit);
+              console.log(habit);
+              LocalStorageService.addHabit(habit);
+              $scope.isEndpointAlive = true;
+            }
+            
+            $mdToast.show(
+              $mdToast.simple()
+                .textContent('created \"' + habit.name + '\" habit')
+                .position(habitApp.defaultToastPosition)
+                .hideDelay(habitApp.defaultToastDisplayTime)
+            );
+            // habit.lastWeekStreak = lastWeekHabitStreak(habit);
+          });
+        }
       }
     }
 
     function removeHabit(position) {
       if($window.confirm('habitApp action will delete habitApp habit')){
-
-        DbHabitService.deleteHabit(habitApp.habits[position].id).then(function(response){
-          if(!response){
-            $scope.isEndpointAlive = false;
-          } else {
-            $scope.isEndpointAlive = true;
-          }
+        if(typeof Token.getRefreshToken() === 'undefined'){
           LocalStorageService.removeHabit(position);
-          LocalStorageService.removeHabitNumbers(position);
           $mdToast.show(
-            $mdToast.simple()
-              .textContent('deleted \"' + habitApp.habits[position].name + '\" habit')
-              .position(habitApp.defaultToastPosition)
-              .hideDelay(habitApp.defaultToastDisplayTime)
-          );
-           habitApp.habits.splice(position, 1);
-        });
+              $mdToast.simple()
+                .textContent('deleted \"' + habitApp.habits[position].name + '\" habit')
+                .position(habitApp.defaultToastPosition)
+                .hideDelay(habitApp.defaultToastDisplayTime)
+            );
+          habitApp.habits.splice(position, 1);
+        }
+        else {
+          DbHabitService.deleteHabit(habitApp.habits[position].id).then(function(response){
+            if(!response){
+              $scope.isEndpointAlive = false;
+            } else {
+              $scope.isEndpointAlive = true;
+            }
+            LocalStorageService.removeHabit(position);
+            LocalStorageService.removeHabitNumbers(position);
+            $mdToast.show(
+              $mdToast.simple()
+                .textContent('deleted \"' + habitApp.habits[position].name + '\" habit')
+                .position(habitApp.defaultToastPosition)
+                .hideDelay(habitApp.defaultToastDisplayTime)
+            );
+             habitApp.habits.splice(position, 1);
+          });
 
+        }
       }
     }
 
     function beginHabit(position) {
       habitApp.habits[position].status.started = new Date();
       habitApp.habits[position].state = habitApp.habitState.STARTED;
-
-      DbHabitService.updateHabit(habitApp.habits[position].requestBody(), habitApp.habits[position].id).then(function (response){
-        if(!response){
-          LocalStorageService.modifyHabit(position, habitApp.habits[position]);
-          $scope.isEndpointAlive = false;
-        } else {
-          $scope.isEndpointAlive = true;
-        }
+      if(typeof Token.getRefreshToken() === 'undefined'){
+        LocalStorageService.modifyHabit(position, habitApp.habits[position]);
         $mdToast.show(
-          $mdToast.simple()
-            .textContent('congrats on starting \"' + habitApp.habits[position].name + '\" habit')
-            .position(habitApp.defaultToastPosition)
-            .hideDelay(habitApp.defaultToastDisplayTime)
-        );
-      });
-
+            $mdToast.simple()
+              .textContent('congrats on starting \"' + habitApp.habits[position].name + '\" habit')
+              .position(habitApp.defaultToastPosition)
+              .hideDelay(habitApp.defaultToastDisplayTime)
+          );
+      }
+      else {
+        DbHabitService.updateHabit(habitApp.habits[position].requestBody(), habitApp.habits[position].id).then(function (response){
+          if(!response){
+            LocalStorageService.modifyHabit(position, habitApp.habits[position]);
+            $scope.isEndpointAlive = false;
+          } else {
+            $scope.isEndpointAlive = true;
+          }
+          $mdToast.show(
+            $mdToast.simple()
+              .textContent('congrats on starting \"' + habitApp.habits[position].name + '\" habit')
+              .position(habitApp.defaultToastPosition)
+              .hideDelay(habitApp.defaultToastDisplayTime)
+          );
+        });
+      }
     }
 
     function finishHabit(position) {
@@ -203,24 +234,33 @@ angular.module('codeApp')
         habitApp.habits[position].status.started,
         habitApp.habits[position].status.finished));
       habitApp.habits[position].current = 1;
-      var streakLength = habitApp.habits[position].lastWeekStreak.length; 
-      habitApp.habits[position].lastWeekStreak[streakLength - 1] = 1;
-      
-      DbHabitService.updateHabit(habitApp.habits[position].requestBody(), habitApp.habits[position].id).then(function (response){
-        if(!response){
-          LocalStorageService.modifyHabit(position, habitApp.habits[position]);
-          $scope.isEndpointAlive = false;
-        } else {
-          $scope.isEndpointAlive = true;
-        }
+      // var streakLength = habitApp.habits[position].lastWeekStreak.length; 
+      // habitApp.habits[position].lastWeekStreak[streakLength - 1] = 1;
+      if(typeof Token.getRefreshToken() === 'undefined'){
+        LocalStorageService.modifyHabit(position, habitApp.habits[position]);
         $mdToast.show(
-          $mdToast.simple()
-            .textContent('congrats on finishing \"' + habitApp.habits[position].name + '\" habit')
-            .position(habitApp.defaultToastPosition)
-            .hideDelay(habitApp.defaultToastDisplayTime)
-        );
-      });
-
+            $mdToast.simple()
+              .textContent('congrats on finishing \"' + habitApp.habits[position].name + '\" habit')
+              .position(habitApp.defaultToastPosition)
+              .hideDelay(habitApp.defaultToastDisplayTime)
+          );
+      }
+      else{
+        DbHabitService.updateHabit(habitApp.habits[position].requestBody(), habitApp.habits[position].id).then(function (response){
+          if(!response){
+            LocalStorageService.modifyHabit(position, habitApp.habits[position]);
+            $scope.isEndpointAlive = false;
+          } else {
+            $scope.isEndpointAlive = true;
+          }
+          $mdToast.show(
+            $mdToast.simple()
+              .textContent('congrats on finishing \"' + habitApp.habits[position].name + '\" habit')
+              .position(habitApp.defaultToastPosition)
+              .hideDelay(habitApp.defaultToastDisplayTime)
+          );
+        });
+      }
       // habitApp.habits[position].lastWeekStreak = lastWeekHabitStreak(habitApp.habits[position]);
     }
 
@@ -231,74 +271,81 @@ angular.module('codeApp')
       var habitNumbers = [];
       var isEmptyInitial = true;
       habitApp.habits = [];
-      
-      if(!$window.navigator.onLine || typeof Token.getRefreshToken() === 'undefined') {
-        habits = LocalStorageService.getAllHabitsData() || [];  
-        habitNumbers = LocalStorageService.getHabitNumbers();
-        for(var j=0; j<habitNumbers.length; j++){
-          for(var i=0; i<habits.length; i++){
-            if(isEmptyInitial){
-              if(habits[i].id === habitNumbers[j].id){
-                habitApp.habits.push(Habit.build(habits[i], habitNumbers[j].days));  
-              }
-            }
-            else {
-              if(habits[i].id === habitNumbers[j].id && habitApp.habits[i].id !== habits[i].id){
-                habitApp.habits.push(Habit.build(habits[i], habitNumbers[j].days));  
-              }
-            }
-          }    
+      if(typeof Token.getRefreshToken() === 'undefined'){
+        habits = LocalStorageService.getAllHabitsData() || [];
+        for(var i=0; i<habits.length; i++){
+          habitApp.habits.push(Habit.build(habits[i]));
         }
-      } 
+      }
       else {
-        DbHabitService.getAllHabitsData().then(function (response){
-          if(!response){
-            habits = LocalStorageService.getAllHabitsData() || [];  
-            habitNumbers = LocalStorageService.getHabitNumbers();
-            for(var j=0; j<habitNumbers.length; j++){
-              for(var i=0; i<habits.length; i++){
-                if(isEmptyInitial){
-                  if(habits[i].id === habitNumbers[j].id){
-                    habitApp.habits.push(Habit.build(habits[i], habitNumbers[j].days));  
-                  }
+        if(!$window.navigator.onLine) {
+          habits = LocalStorageService.getAllHabitsData() || [];  
+          habitNumbers = LocalStorageService.getHabitNumbers();
+          for(var j=0; j<habitNumbers.length; j++){
+            for(var i=0; i<habits.length; i++){
+              if(isEmptyInitial){
+                if(habits[i].id === habitNumbers[j].id){
+                  habitApp.habits.push(Habit.build(habits[i], habitNumbers[j].days));  
                 }
-                else {
-                  if(habits[i].id === habitNumbers[j].id && habitApp.habits[i].id !== habits[i].id){
-                    habitApp.habits.push(Habit.build(habits[i], habitNumbers[j].days));  
-                  }
+              }
+              else {
+                if(habits[i].id === habitNumbers[j].id && habitApp.habits[i].id !== habits[i].id){
+                  habitApp.habits.push(Habit.build(habits[i], habitNumbers[j].days));  
                 }
-              }    
-            }
-            $scope.isEndpointAlive = false;
+              }
+            }    
           }
-          else {
-            habits = response.data.habits || [];
-            LocalStorageService.setAllHabitsData(habits);
-            DbHabitService.habitNumbers().then(function(response){
-              habitNumbers = response.data.number;
-              LocalStorageService.setHabitNumbers(habitNumbers);
+        } 
+        else {
+          DbHabitService.getAllHabitsData().then(function (response){
+            if(!response){
+              habits = LocalStorageService.getAllHabitsData() || [];  
+              habitNumbers = LocalStorageService.getHabitNumbers();
               for(var j=0; j<habitNumbers.length; j++){
                 for(var i=0; i<habits.length; i++){
-                  if(habits[i].id === habitNumbers[j].id){
-                    habitApp.habits.push(Habit.build(habits[i], habitNumbers[j].days));  
+                  if(isEmptyInitial){
+                    if(habits[i].id === habitNumbers[j].id){
+                      habitApp.habits.push(Habit.build(habits[i], habitNumbers[j].days));  
+                    }
+                  }
+                  else {
+                    if(habits[i].id === habitNumbers[j].id && habitApp.habits[i].id !== habits[i].id){
+                      habitApp.habits.push(Habit.build(habits[i], habitNumbers[j].days));  
+                    }
                   }
                 }    
               }
-              DbHabitService.lastWeekStreak().then(function (response){
-                var streakData = response.data.lastweek
-                for(var i=0; i<streakData.length; i++){
-                  for(var j=0; j<habitApp.habits.length; j++){
-                    if(streakData[i].id === habitApp.habits[j].id){
-                      habitApp.habits[j].lastWeekStreak = streakData[i].streak;
+              $scope.isEndpointAlive = false;
+            }
+            else {
+              habits = response.data.habits || [];
+              LocalStorageService.setAllHabitsData(habits);
+              DbHabitService.habitNumbers().then(function(response){
+                habitNumbers = response.data.number;
+                LocalStorageService.setHabitNumbers(habitNumbers);
+                for(var j=0; j<habitNumbers.length; j++){
+                  for(var i=0; i<habits.length; i++){
+                    if(habits[i].id === habitNumbers[j].id){
+                      habitApp.habits.push(Habit.build(habits[i], habitNumbers[j].days));  
+                    }
+                  }    
+                }
+                DbHabitService.lastWeekStreak().then(function (response){
+                  var streakData = response.data.lastweek
+                  for(var i=0; i<streakData.length; i++){
+                    for(var j=0; j<habitApp.habits.length; j++){
+                      if(streakData[i].id === habitApp.habits[j].id){
+                        habitApp.habits[j].lastWeekStreak = streakData[i].streak;
+                      }
                     }
                   }
-                }
+                });
               });
-            });
-            $scope.isEndpointAlive = true;
-          }
-        });
+              $scope.isEndpointAlive = true;
+            }
+          });
 
+        }
       }
     }
 
