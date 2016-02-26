@@ -14,7 +14,6 @@ angular
   	'ui.bootstrap',
   	'LocalStorageModule',
   	'ngMaterial',
-  	'luegg.directives',
   	'ui.validate'
   ])
   .config(function(localStorageServiceProvider){

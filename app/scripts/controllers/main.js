@@ -129,6 +129,13 @@ angular.module('codeApp')
         if(typeof Token.getRefreshToken() === 'undefined'){
           habitApp.habits.push(habit);
           LocalStorageService.addHabit(habit);
+          var habitNumbers = LocalStorageService.getHabitNumbers() || [];
+          var maxId = _.max(_.map(habitNumbers, 'id'));
+          if(typeof maxId === 'undefined'){
+            maxId = 0;
+          }
+          habitNumbers.push({'id': maxId + 1, 'days': 1});
+          LocalStorageService.setHabitNumbers(habitNumbers);
           $mdToast.show(
             $mdToast.simple()
               .textContent('created \"' + habit.name + '\" habit')
