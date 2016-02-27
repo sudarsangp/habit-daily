@@ -109,7 +109,8 @@ angular.module('codeApp')
         'created': moment(habit.created).unix(),
         'status': [statusToUnix(habit.status)],
         'state': [habit.state],
-        'current': [habit.current]
+        'current': [habit.current],
+        'id': habit.id
       };
       return formatHabit;
 		}

@@ -127,8 +127,6 @@ angular.module('codeApp')
         habit.name = habitName;
         habitApp.habitName = '';
         if(typeof Token.getRefreshToken() === 'undefined'){
-          habitApp.habits.push(habit);
-          LocalStorageService.addHabit(habit);
           var habitNumbers = LocalStorageService.getHabitNumbers() || [];
           var maxId = _.max(_.map(habitNumbers, 'id'));
           if(typeof maxId === 'undefined'){
@@ -136,6 +134,9 @@ angular.module('codeApp')
           }
           habitNumbers.push({'id': maxId + 1, 'days': 1});
           LocalStorageService.setHabitNumbers(habitNumbers);
+          habit.id = maxId + 1;
+          habitApp.habits.push(habit);
+          LocalStorageService.addHabit(habit);
           $mdToast.show(
             $mdToast.simple()
               .textContent('created \"' + habit.name + '\" habit')
@@ -280,8 +281,20 @@ angular.module('codeApp')
       habitApp.habits = [];
       if(typeof Token.getRefreshToken() === 'undefined'){
         habits = LocalStorageService.getAllHabitsData() || [];
-        for(var i=0; i<habits.length; i++){
-          habitApp.habits.push(Habit.build(habits[i]));
+        habitNumbers = LocalStorageService.getHabitNumbers() || [];
+        for(var j=0; j<habitNumbers.length; j++){
+          for(var i=0; i<habits.length; i++){
+            if(isEmptyInitial){
+              if(habits[i].id === habitNumbers[j].id){
+                habitApp.habits.push(Habit.build(habits[i], habitNumbers[j].days));  
+              }
+            }
+            else {
+              if(habits[i].id === habitNumbers[j].id && habitApp.habits[i].id !== habits[i].id){
+                habitApp.habits.push(Habit.build(habits[i], habitNumbers[j].days));  
+              }
+            }
+          }    
         }
       }
       else {
