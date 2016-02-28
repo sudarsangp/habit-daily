@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('codeApp')
-	.factory('Habit', function (TimeService, DbHabitService){
+	.factory('Habit', function (TimeService, DbHabitService, Token, LocalStorageService){
 
 		function Habit(){
 			this.id = 0;
@@ -39,7 +39,11 @@ angular.module('codeApp')
 
       if(moment(habit.created).date() !== moment(today).date()){
         if(numbers <= (moment(moment(today) - moment(habit.created)).date())) {
-        	DbHabitService.runOnceHabit(habit.id);
+        	if(typeof Token.getRefreshToken() === 'undefined'){
+        		LocalStorageService.newDayModifyHabit(habit.id);
+        	} else{
+        		DbHabitService.runOnceHabit(habit.id);
+        	}
           habit.status = {};
           habit.current = 0;
           habit.state = 0;

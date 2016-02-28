@@ -10,6 +10,7 @@ angular.module('codeApp')
 		this.setAllHabitsData = setAllHabitsData;
 		this.getTodayHabits = getTodayHabits;
 		this.updateHabitWithServerData = updateHabitWithServerData;
+		this.newDayModifyHabit = newDayModifyHabit;
 
 		this.getHabitNumbers = getHabitNumbers;
 		this.setHabitNumbers = setHabitNumbers;
@@ -124,5 +125,14 @@ angular.module('codeApp')
 				status.finished = moment(statusData.finished).unix();
 			}
 			return status;
+		}
+
+		function newDayModifyHabit(habitId){
+			var allHabits = localStorageService.get(habitsKey);
+			var position = _.findIndex(allHabits, function(o) {return o.id === habitId;});
+      allHabits[position].status.push({});
+      allHabits[position].state.push(0);
+      allHabits[position].current.push(0);
+      localStorageService.set(habitsKey, allHabits);
 		}
 	});
