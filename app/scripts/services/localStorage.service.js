@@ -134,5 +134,10 @@ angular.module('codeApp')
       allHabits[position].state.push(0);
       allHabits[position].current.push(0);
       localStorageService.set(habitsKey, allHabits);
+      
+      var allNumbers = localStorageService.get(habitNumbers);
+      var numberPosition = _.findIndex(allNumbers, function(o) {return o.id === habitId;});
+      allNumbers[numberPosition].days += 1;
+      localStorageService.set(habitNumbers, allNumbers);
 		}
 	});

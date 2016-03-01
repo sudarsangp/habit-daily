@@ -174,6 +174,7 @@ angular.module('codeApp')
       if($window.confirm('habitApp action will delete habitApp habit')){
         if(typeof Token.getRefreshToken() === 'undefined'){
           LocalStorageService.removeHabit(position);
+          LocalStorageService.removeHabitNumbers(position);
           $mdToast.show(
               $mdToast.simple()
                 .textContent('deleted \"' + habitApp.habits[position].name + '\" habit')
