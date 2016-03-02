@@ -136,6 +136,7 @@ angular.module('codeApp')
           LocalStorageService.setHabitNumbers(habitNumbers);
           habit.id = maxId + 1;
           habitApp.habits.push(habit);
+          habitApp.habits[habitApp.habits.length-1].lastWeekStreak = [0];
           LocalStorageService.addHabit(habit);
           $mdToast.show(
             $mdToast.simple()
