@@ -48,6 +48,7 @@ angular.module('codeApp')
               LocalStorageService.setHabitNumbers(habitNumbers);
               for(var j=0; j<habitNumbers.length; j++){
                 for(var i=0; i<habits.length; i++){
+                  console.log(habitApp.habits);
                   if(habits[i].id === habitNumbers[j].id && habitApp.habits[i].id !== habits[i].id){
                     habitApp.habits.push(Habit.build(habits[i], habitNumbers[j].days));  
                   }
@@ -78,7 +79,7 @@ angular.module('codeApp')
         var todayHabits;
         DbHabitService.getAllHabitsData().then(function (response){
           habits = response.data.habits || [];
-          console.log(habits);
+          console.log(habitApp.habits);
           LocalStorageService.setAllHabitsData(habits);
           DbHabitService.habitNumbers().then(function(response){
             var habitNumbers = response.data.number;

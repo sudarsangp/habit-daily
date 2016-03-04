@@ -138,6 +138,7 @@ class HabitAPI(Resource):
 
   def put(self, id):
     object_id = HabitFormat().get_object_id_from_habit_id(id)
+    print object_id
     db_habit = HabitDaily.objects.get(id = object_id)
     
     if not bool(db_habit):
