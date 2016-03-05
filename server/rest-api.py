@@ -138,7 +138,30 @@ class HabitAPI(Resource):
 
   def put(self, id):
     object_id = HabitFormat().get_object_id_from_habit_id(id)
+    print 'object id'
     print object_id
+    if object_id is None:
+      args = self.reqparse.parse_args()
+      habit = {
+        'id': 0,
+        'name': args['name'],
+        'streak': args['streak'],
+        'created': args['created'],
+        'status': args['status'],
+        'state': args['state'],
+        'current': args['current']
+      }
+      print habit
+      db_habit = HabitDaily(name = habit['name'],streak = habit['streak'],created = habit['created'],status = habit['status'],state = habit['state'],current = habit['current']).save()
+      format_habit = HabitFormat().db_to_api(db_habit)
+      max_id = 0
+      for mapper in HabitMapper.objects:
+        if max_id < int(mapper.habitId):
+          max_id = int(mapper.habitId)
+      id_value = max_id + 1 if max_id > 0 else 1
+      format_habit['id'] = id_value
+      mapper_habit = HabitMapper(habitId = int(id_value), objectId = str(db_habit.id)).save()
+    
     db_habit = HabitDaily.objects.get(id = object_id)
     
     if not bool(db_habit):
