@@ -327,10 +327,21 @@ def update_list(habit_id):
 @crossdomain(origin='*', headers=['Content-Type', 'Authorization'])
 @auth.login_required
 def number_of_days():
-  number_len = [];
+  number_len = []
   for habit in HabitDaily.objects:
     habit_id = HabitFormat().get_habit_id_from_object_id(habit.id)
     number_len.append({'id': habit_id, 'days': len(habit['status'])})
+  return jsonify({'number': number_len})
+
+@app.route('/number/<int:habit_id>', methods = ['OPTIONS', 'GET'])
+@crossdomain(origin='*', headers=['Content-Type', 'Authorization'])
+@auth.login_required
+def number_for_habit(habit_id):
+  number_len = []
+  for habit in HabitDaily.objects:
+    habit_id_from_server = HabitFormat().get_habit_id_from_object_id(habit.id)
+    if habit_id === habit_id_from_server:
+      number_len.append({'id': habit_id_from_server, 'days': len(habit['status'])})  
   return jsonify({'number': number_len})
 
 @app.route('/lastweek/')

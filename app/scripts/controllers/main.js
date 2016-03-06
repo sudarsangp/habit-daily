@@ -166,7 +166,7 @@ angular.module('codeApp')
                 .position(habitApp.defaultToastPosition)
                 .hideDelay(habitApp.defaultToastDisplayTime)
             );
-            // habit.lastWeekStreak = lastWeekHabitStreak(habit);
+            habitApp.habits[habitApp.habits.length-1].lastWeekStreak = [0];
           });
         }
       }
@@ -272,7 +272,6 @@ angular.module('codeApp')
           );
         });
       }
-      // habitApp.habits[position].lastWeekStreak = lastWeekHabitStreak(habitApp.habits[position]);
     }
 
     function initializeHabitsToday() {
