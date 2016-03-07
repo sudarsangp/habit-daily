@@ -167,6 +167,11 @@ angular.module('codeApp')
                 .hideDelay(habitApp.defaultToastDisplayTime)
             );
             habitApp.habits[habitApp.habits.length-1].lastWeekStreak = [0];
+            DbHabitService.numberForHabit(habit.id).then(function (response){
+              var habitNumbers = LocalStorageService.getHabitNumbers() || [];
+              habitNumbers.push({'id': habit.id, 'days': Number(response.data.days)});
+              LocalStorageService.setHabitNumbers(habitNumbers);
+            });
           });
         }
       }
@@ -213,11 +218,11 @@ angular.module('codeApp')
       if(typeof Token.getRefreshToken() === 'undefined'){
         LocalStorageService.modifyHabit(position, habitApp.habits[position]);
         $mdToast.show(
-            $mdToast.simple()
-              .textContent('congrats on starting \"' + habitApp.habits[position].name + '\" habit')
-              .position(habitApp.defaultToastPosition)
-              .hideDelay(habitApp.defaultToastDisplayTime)
-          );
+          $mdToast.simple()
+            .textContent('congrats on starting \"' + habitApp.habits[position].name + '\" habit')
+            .position(habitApp.defaultToastPosition)
+            .hideDelay(habitApp.defaultToastDisplayTime)
+        );
       }
       else {
         DbHabitService.updateHabit(habitApp.habits[position].requestBody(), habitApp.habits[position].id).then(function (response){
@@ -250,11 +255,11 @@ angular.module('codeApp')
       if(typeof Token.getRefreshToken() === 'undefined'){
         LocalStorageService.modifyHabit(position, habitApp.habits[position]);
         $mdToast.show(
-            $mdToast.simple()
-              .textContent('congrats on finishing \"' + habitApp.habits[position].name + '\" habit')
-              .position(habitApp.defaultToastPosition)
-              .hideDelay(habitApp.defaultToastDisplayTime)
-          );
+          $mdToast.simple()
+            .textContent('congrats on finishing \"' + habitApp.habits[position].name + '\" habit')
+            .position(habitApp.defaultToastPosition)
+            .hideDelay(habitApp.defaultToastDisplayTime)
+        );
       }
       else{
         DbHabitService.updateHabit(habitApp.habits[position].requestBody(), habitApp.habits[position].id).then(function (response){

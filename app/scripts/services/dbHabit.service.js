@@ -11,7 +11,8 @@ angular.module('codeApp')
 		this.habitNumbers = habitNumbers;
 		this.lastWeekStreak = lastWeekStreak;
 		this.signInUser = signInUser;
-
+		this.numberForHabit = numberForHabit;
+		
 		function getAllHabitsData(){
 			return $http.get('http://127.0.0.1:8000/habitdaily/api/v1.0/habits', {
 				headers: {'Authorization':  $rootScope.token + ':'}
@@ -40,6 +41,10 @@ angular.module('codeApp')
 
 		function habitNumbers(){
 			return $http.get('http://127.0.0.1:8000/number/');
+		}
+
+		function numberForHabit(id){
+			return $http.get('http://127.0.0.1:8000/number/' + id)
 		}
 
 		function lastWeekStreak(){

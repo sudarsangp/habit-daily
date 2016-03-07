@@ -337,12 +337,12 @@ def number_of_days():
 @crossdomain(origin='*', headers=['Content-Type', 'Authorization'])
 @auth.login_required
 def number_for_habit(habit_id):
-  number_len = []
+  habit_number = {}
   for habit in HabitDaily.objects:
     habit_id_from_server = HabitFormat().get_habit_id_from_object_id(habit.id)
-    if habit_id === habit_id_from_server:
-      number_len.append({'id': habit_id_from_server, 'days': len(habit['status'])})  
-  return jsonify({'number': number_len})
+    if habit_id == habit_id_from_server:
+      habit_number = {'id': habit_id_from_server, 'days': len(habit['status'])} 
+  return jsonify(habit_number)
 
 @app.route('/lastweek/')
 @crossdomain(origin='*')
