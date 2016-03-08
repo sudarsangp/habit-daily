@@ -17,7 +17,6 @@ angular.module('codeApp')
       modalInstance.result.then(function (data){
         DbHabitService.signInUser(data).then(function (response){
           navbar.userLoggedIn = true;
-          console.log(data);
           $rootScope.token = response.data.token;
           Token.setRefreshToken(response.data.token);
           $mdToast.hide();

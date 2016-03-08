@@ -36,7 +36,6 @@ angular.module('codeApp')
 			habit.name = habitData.name;
       habit.streak = habitData.streak;
       habit.created = moment(habitData.created * 1000).toDate();
-      console.log(dateDiffInDays( new Date(habit.created), today));
       if(moment(habit.created).date() !== moment(today).date()){
         if(numbers <= (dateDiffInDays( new Date(habit.created), today))) {
         	if(typeof Token.getRefreshToken() === 'undefined'){

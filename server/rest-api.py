@@ -138,8 +138,6 @@ class HabitAPI(Resource):
 
   def put(self, id):
     object_id = HabitFormat().get_object_id_from_habit_id(id)
-    print 'object id'
-    print object_id
     if object_id is None:
       args = self.reqparse.parse_args()
       habit = {
@@ -151,7 +149,6 @@ class HabitAPI(Resource):
         'state': args['state'],
         'current': args['current']
       }
-      print habit
       db_habit = HabitDaily(name = habit['name'],streak = habit['streak'],created = habit['created'],status = habit['status'],state = habit['state'],current = habit['current']).save()
       format_habit = HabitFormat().db_to_api(db_habit)
       max_id = 0
@@ -261,7 +258,6 @@ class User(Document):
 
   @staticmethod
   def verify_auth_token(token):
-    print token
     s = Serializer(app.config['SECRET_KEY'])
     try:
       data = s.loads(token)
@@ -287,13 +283,11 @@ def new_user():
 
 @auth.verify_password
 def verify_password(username, password):
-  print 'called'
   auth_info = request.headers.get('Authorization')
   username = auth_info.split(':')[0]
   password = auth_info.split(':')[1]
   user = User.verify_auth_token(username)
   if user:
-    print 'reached'
     g.user = user
     return True
   else:
@@ -307,7 +301,6 @@ def verify_password(username, password):
 @crossdomain(origin='*', headers=['Content-Type', 'Authorization'])
 @auth.login_required
 def get_auth_token():
-  print 'reaching token method'
   token = g.user.generate_auth_token()
   return jsonify({ 'token': token.decode('ascii') })
 
