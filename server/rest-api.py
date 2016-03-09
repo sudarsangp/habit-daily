@@ -6,8 +6,12 @@ from mongoengine import Document, StringField, IntField, ListField, DictField
 from passlib.apps import custom_app_context as pwd_context
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 
+import ConfigParser
+config = ConfigParser.ConfigParser()
+config.read('app.cfg')
+
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'basic habit streak'
+app.config['SECRET_KEY'] = config.get('app', 'app_config')
 
 api = Api(app)
 db = MongoEngine(app)
