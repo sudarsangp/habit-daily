@@ -15,7 +15,7 @@ angular.module('codeApp')
       STARTED: 1,
       FINISHED: 2
     });
-    habitApp.defaultToastPosition = 'top right';
+    habitApp.defaultToastPosition = 'bottom left';
     habitApp.defaultToastDisplayTime = 3000;
     habitApp.showPencil = false;
     habitApp.disableAddButton = true;

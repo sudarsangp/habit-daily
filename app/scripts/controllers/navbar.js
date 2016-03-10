@@ -8,6 +8,7 @@ angular.module('codeApp')
 		navbar.userLoggedIn = false;
 		navbar.today = moment().local().format('dddd[,] Do MMMM YYYY');
 		navbar.openSignInModal = openSignInModal;
+    navbar.userLogOut = userLogOut;
 
 		function openSignInModal(){
       var modalInstance = $uibModal.open({
@@ -41,5 +42,9 @@ angular.module('codeApp')
       })
     }
 
+    function userLogOut(){
+      navbar.userLoggedIn = false;
+      $rootScope.token = null;
+    }
     showNotLoggedInToast();
 	});
