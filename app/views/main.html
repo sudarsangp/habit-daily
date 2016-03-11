@@ -99,7 +99,7 @@
 <script type="text/ng-template" id="addHabitForm.html">
   <div class="modal-body">
     <md-content layout-padding>
-      <form name='habitAddForm'>
+      <form name='habitAddForm' ng-submit="addHabit(habitName)">
         <div layout-gt-sm="row">
           <md-input-container class="md-block" flex-gt-sm>
             <label>Habit Name</label>
