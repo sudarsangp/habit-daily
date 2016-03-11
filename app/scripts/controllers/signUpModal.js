@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('codeApp')
-  .controller('SignInModalCtrl', function ($scope, $uibModalInstance){
-    $scope.signInUser = signInUser;
+  .controller('SignUpModalCtrl', function ($scope, $uibModalInstance){
+    $scope.signUpUser = signUpUser;
 
-    function signInUser(username, password){
+    function signUpUser(username, password){
       var result = {
         'username': username,
         'password': password

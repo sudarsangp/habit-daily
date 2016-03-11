@@ -6,6 +6,7 @@
     </h2>
     <span flex></span>
     <md-button ng-if="!navbar.userLoggedIn" ng-click="navbar.openSignInModal()">Sign In</md-button>
+    <md-button ng-if="!navbar.userLoggedIn" ng-click="navbar.openSignUpModal()">Sign Up</md-button>
     <md-button ng-bind="navbar.today" aria-label="today's date" ng-if="navbar.userLoggedIn"></md-button>
     <md-button ng-if="navbar.userLoggedIn" ng-click="navbar.userLogOut()">Sign Out</md-button>
   </div>
@@ -26,6 +27,28 @@
           </md-input-container>
           <md-input-container>
             <md-button class="md-raised md-primary" ng-click="signInUser(username, password)" ng-disabled="signInForm.$invalid">Sign In</md-button>
+          </md-input-container>
+        </div>
+      </form>
+    </md-content>
+  </div>
+</script>
+
+<script type="text/ng-template" id="userSignUp.html">
+  <div class="modal-body">
+    <md-content layout-padding>
+      <form name='signUpForm'>
+        <div layout-gt-sm="row">
+          <md-input-container class="md-block" flex-gt-sm>
+            <label>Username</label>
+            <input type="text" ng-model="username" required>
+          </md-input-container>
+          <md-input-container class="md-block" flex-gt-sm>
+            <label>Password</label>
+            <input type="password" ng-model="password" required>
+          </md-input-container>
+          <md-input-container>
+            <md-button class="md-raised md-primary" ng-click="signUpUser(username, password)" ng-disabled="signUpForm.$invalid">Sign Up</md-button>
           </md-input-container>
         </div>
       </form>

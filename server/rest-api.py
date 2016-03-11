@@ -272,7 +272,8 @@ class User(Document):
     user = User.objects(username = data['name'])
     return user
 
-@app.route('/api/users', methods = ['POST'])
+@app.route('/api/users', methods = ['OPTIONS', 'POST'])
+@crossdomain(origin='*', headers=['Content-Type'])
 def new_user():
   username = request.json.get('username')
   password = request.json.get('password')

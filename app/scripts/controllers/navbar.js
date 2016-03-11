@@ -4,11 +4,14 @@ angular.module('codeApp')
 	.controller('NavbarCtrl', function ($uibModal, DbHabitService, $rootScope, Token, $mdToast){
 		var navbar = this;
 		var signInToast;
+    var defaultToastPosition = 'bottom left';
+    var defaultToastDisplayTime = 3000;
 
 		navbar.userLoggedIn = false;
 		navbar.today = moment().local().format('dddd[,] Do MMMM YYYY');
 		navbar.openSignInModal = openSignInModal;
     navbar.userLogOut = userLogOut;
+    navbar.openSignUpModal = openSignUpModal;
 
 		function openSignInModal(){
       var modalInstance = $uibModal.open({
@@ -47,4 +50,23 @@ angular.module('codeApp')
       $rootScope.token = null;
     }
     showNotLoggedInToast();
+
+    function openSignUpModal(){
+       var modalInstance = $uibModal.open({
+        templateUrl: 'userSignUp.html',
+        controller: 'SignUpModalCtrl'
+      });
+       modalInstance.result.then(function (data){
+        DbHabitService.signUpUser(data).then(function (response){
+          $mdToast.show(
+            $mdToast.simple()
+              .textContent('created \"' + response.data.username + '\" user')
+              .position(defaultToastPosition)
+              .hideDelay(defaultToastDisplayTime)
+          );
+        }, function(){
+          console.log('error');
+        });
+      });
+    }
 	});
