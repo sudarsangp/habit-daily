@@ -2,7 +2,7 @@ from flask import Flask, abort, jsonify, g
 from flask.ext.restful import Api, Resource, reqparse, fields, marshal
 from flask.ext.mongoengine import MongoEngine
 from flask.ext.httpauth import HTTPBasicAuth
-from mongoengine import Document, StringField, IntField, ListField, DictField
+from mongoengine import Document, StringField, IntField, ListField, DictField, EmbeddedDocument, EmbeddedDocumentField
 from passlib.apps import custom_app_context as pwd_context
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 
@@ -206,7 +206,7 @@ api.add_resource(HabitAPI, '/habitdaily/api/v1.0/habits/<int:id>', endpoint='hab
    curl -i -X DELETE http://127.0.0.1:8000/habitdaily/api/v1.0/habits/0
 """
 
-class HabitDaily(Document):
+class HabitDaily(EmbeddedDocument):
   name = StringField()
   streak = IntField()
   created = IntField()
@@ -249,6 +249,7 @@ class HabitMapper(Document):
 class User(Document):
   username = StringField()
   password_hash = StringField()
+  habits = ListField(EmbeddedDocumentField(HabitDaily))
 
   def hash_password(self, password):
     self.password_hash = pwd_context.encrypt(password)
@@ -294,11 +295,13 @@ def verify_password(username, password):
   user = User.verify_auth_token(username)
   if user:
     g.user = user
+    print g.user
     return True
   else:
     for user in User.objects:
       if user.username == username and user.verify_password(password):
         g.user = user
+        print g.user
         return True
   return False
 
