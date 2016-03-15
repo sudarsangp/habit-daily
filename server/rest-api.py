@@ -93,7 +93,11 @@ class HabitListAPI(Resource):
     super(HabitListAPI, self).__init__()
 
   def get(self):
-    all_habits = HabitFormat().all_habits_db_to_api(HabitDaily.objects)
+    print 
+    for u in User.objects:
+      if u.username == g.get('user', None).username:
+        print 'match'
+    all_habits = HabitFormat().all_habits_db_to_api(User.objects.get(username = g.user.username).habits)
     return {'habits': [marshal(habit, habit_fields) for habit in all_habits]}
 
   def post(self):
