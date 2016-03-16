@@ -93,11 +93,7 @@ class HabitListAPI(Resource):
     super(HabitListAPI, self).__init__()
 
   def get(self):
-    print 
-    for u in User.objects:
-      if u.username == g.get('user', None).username:
-        print 'match'
-    all_habits = HabitFormat().all_habits_db_to_api(User.objects.get(username = g.user.username).habits)
+    all_habits = HabitFormat().all_habits_db_to_api()
     return {'habits': [marshal(habit, habit_fields) for habit in all_habits]}
 
   def post(self):
@@ -281,6 +277,12 @@ class User(Document):
     user = User.objects(username = data['name'])
     return user
 
+  def get_user_name(self):
+    return self.username
+
+  def get_user_habits(self):
+    return self.habits
+
 @app.route('/api/users', methods = ['OPTIONS', 'POST'])
 @crossdomain(origin='*', headers=['Content-Type'])
 def new_user():
@@ -303,13 +305,11 @@ def verify_password(username, password):
   user = User.verify_auth_token(username)
   if user:
     g.user = user
-    print g.user
     return True
   else:
     for user in User.objects:
       if user.username == username and user.verify_password(password):
         g.user = user
-        print g.user
         return True
   return False
 
@@ -317,6 +317,7 @@ def verify_password(username, password):
 @crossdomain(origin='*', headers=['Content-Type', 'Authorization'])
 @auth.login_required
 def get_auth_token():
+  print g.user.get_user_name()
   token = g.user.generate_auth_token()
   return jsonify({ 'token': token.decode('ascii') })
 
@@ -362,5 +363,10 @@ def last_week_streak():
     habit_id = HabitFormat().get_habit_id_from_object_id(habit.id)
     streak_habits.append({'id': habit_id, 'streak': habit.current[-7:]})
   return jsonify({'lastweek': streak_habits})
+
+@app.route('/check')
+def check():
+  print type(g)
+  return 'hello user'
 
 app.run(host='127.0.0.1', port=8000, debug=True, threaded=True)
