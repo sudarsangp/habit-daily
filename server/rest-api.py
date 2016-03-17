@@ -116,10 +116,10 @@ class HabitListAPI(Resource):
     id_value = max_id + 1 if max_id > 0 else 1
     format_habit['id'] = id_value
     mapper_habit = HabitMapper(habitId = int(id_value), objectId = str(db_habit.id)).save()
-    active_user = User.objects.get(username = g.user.username)
-    print active_user
-    active_user.habits.append(db_habit)
-    active_user.save()
+    # active_user = User.objects.get(username = g.user.username)
+    # print active_user
+    # active_user.habits.append(db_habit)
+    # active_user.save()
     return {'habit': marshal(format_habit, habit_fields)}, 201
 
   def options(self):
@@ -363,10 +363,5 @@ def last_week_streak():
     habit_id = HabitFormat().get_habit_id_from_object_id(habit.id)
     streak_habits.append({'id': habit_id, 'streak': habit.current[-7:]})
   return jsonify({'lastweek': streak_habits})
-
-@app.route('/check')
-def check():
-  print type(g)
-  return 'hello user'
 
 app.run(host='127.0.0.1', port=8000, debug=True, threaded=True)
