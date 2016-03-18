@@ -317,7 +317,6 @@ def verify_password(username, password):
 @crossdomain(origin='*', headers=['Content-Type', 'Authorization'])
 @auth.login_required
 def get_auth_token():
-  print g.user.get_user_name()
   token = g.user.generate_auth_token()
   return jsonify({ 'token': token.decode('ascii') })
 
