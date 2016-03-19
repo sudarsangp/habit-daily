@@ -93,10 +93,15 @@ class HabitListAPI(Resource):
     super(HabitListAPI, self).__init__()
 
   def get(self):
-    all_habits = HabitFormat().all_habits_db_to_api()
+    active_user = User.verify_auth_token(request.headers.get('Authorization').split(':')[0])
+    print active_user.first().username
+    print type(active_user.first())
+    print active_user.first().get_user_name()
+    all_habits = HabitFormat().all_habits_db_to_api(active_user.first().get_user_habits())
     return {'habits': [marshal(habit, habit_fields) for habit in all_habits]}
 
   def post(self):
+    active_user = User.verify_auth_token(request.headers.get('Authorization').split(':')[0])
     args = self.reqparse.parse_args()
     habit = {
       'id': 0,
@@ -107,7 +112,13 @@ class HabitListAPI(Resource):
       'state': args['state'],
       'current': args['current']
     }
-    db_habit = HabitDaily(name = habit['name'],streak = habit['streak'],created = habit['created'],status = habit['status'],state = habit['state'],current = habit['current']).save()
+    db_habit = HabitDaily(name = habit['name'],streak = habit['streak'],created = habit['created'],status = habit['status'],state = habit['state'],current = habit['current'])
+    print 'type', type(active_user.first().habits)
+    active_user.first().habits.insert(db_habit)
+    active_user.first().save()
+    print db_habit
+    print active_user.first().habits
+
     format_habit = HabitFormat().db_to_api(db_habit)
     max_id = 0
     for mapper in HabitMapper.objects:
@@ -116,10 +127,6 @@ class HabitListAPI(Resource):
     id_value = max_id + 1 if max_id > 0 else 1
     format_habit['id'] = id_value
     mapper_habit = HabitMapper(habitId = int(id_value), objectId = str(db_habit.id)).save()
-    # active_user = User.objects.get(username = g.user.username)
-    # print active_user
-    # active_user.habits.append(db_habit)
-    # active_user.save()
     return {'habit': marshal(format_habit, habit_fields)}, 201
 
   def options(self):
@@ -317,6 +324,7 @@ def verify_password(username, password):
 @crossdomain(origin='*', headers=['Content-Type', 'Authorization'])
 @auth.login_required
 def get_auth_token():
+  # active_user = User.verify_auth_token(request.headers.get('Authorization').split(':')[0])
   token = g.user.generate_auth_token()
   return jsonify({ 'token': token.decode('ascii') })
 
