@@ -93,6 +93,7 @@ class HabitListAPI(Resource):
     super(HabitListAPI, self).__init__()
 
   def get(self):
+    print g.user.username
     active_user = User.verify_auth_token(request.headers.get('Authorization').split(':')[0])
     print active_user.first().username
     print type(active_user.first())
@@ -113,7 +114,7 @@ class HabitListAPI(Resource):
       'current': args['current']
     }
     db_habit = HabitDaily(name = habit['name'],streak = habit['streak'],created = habit['created'],status = habit['status'],state = habit['state'],current = habit['current'])
-    print 'type', type(active_user.first().habits)
+    print 'type', type(HabitDaily(active_user.first().habits))
     active_user.first().habits.insert(db_habit)
     active_user.first().save()
     print db_habit
@@ -325,6 +326,8 @@ def verify_password(username, password):
 @auth.login_required
 def get_auth_token():
   # active_user = User.verify_auth_token(request.headers.get('Authorization').split(':')[0])
+  print 'username', g.user.username
+  print 'habits', g.user.habits, type(g.user.habits)
   token = g.user.generate_auth_token()
   return jsonify({ 'token': token.decode('ascii') })
 
@@ -345,7 +348,8 @@ def update_list(habit_id):
 @auth.login_required
 def number_of_days():
   number_len = []
-  for habit in HabitDaily.objects:
+  active_user = User.verify_auth_token(request.headers.get('Authorization').split(':')[0])
+  for habit in active_user.first().get_user_habits().objects:
     habit_id = HabitFormat().get_habit_id_from_object_id(habit.id)
     number_len.append({'id': habit_id, 'days': len(habit['status'])})
   return jsonify({'number': number_len})
