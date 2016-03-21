@@ -2,7 +2,7 @@ from flask import Flask, abort, jsonify, g
 from flask.ext.restful import Api, Resource, reqparse, fields, marshal
 from flask.ext.mongoengine import MongoEngine
 from flask.ext.httpauth import HTTPBasicAuth
-from mongoengine import Document, StringField, IntField, ListField, DictField, EmbeddedDocument, EmbeddedDocumentField
+from mongoengine import Document, StringField, IntField, ListField, DictField, EmbeddedDocument, EmbeddedDocumentListField
 from passlib.apps import custom_app_context as pwd_context
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 
@@ -114,9 +114,9 @@ class HabitListAPI(Resource):
       'current': args['current']
     }
     db_habit = HabitDaily(name = habit['name'],streak = habit['streak'],created = habit['created'],status = habit['status'],state = habit['state'],current = habit['current'])
-    print 'type', type(HabitDaily(active_user.first().habits))
-    active_user.first().habits.insert(db_habit)
-    active_user.first().save()
+    #print 'type', type(HabitDaily(active_user.first().habits))
+    active_user.habits.create(db_habit)
+    active_user.save()
     print db_habit
     print active_user.first().habits
 
@@ -261,7 +261,7 @@ class HabitMapper(Document):
 class User(Document):
   username = StringField()
   password_hash = StringField()
-  habits = ListField(EmbeddedDocumentField(HabitDaily))
+  habits = EmbeddedDocumentListField(HabitDaily)
 
   def hash_password(self, password):
     self.password_hash = pwd_context.encrypt(password)
@@ -275,12 +275,16 @@ class User(Document):
 
   @staticmethod
   def verify_auth_token(token):
+    print token
     s = Serializer(app.config['SECRET_KEY'])
     try:
       data = s.loads(token)
+      print data
     except SignatureExpired:
+      print 'expired'
       return None    # valid token, but expired
     except BadSignature:
+      print 'invalid token'
       return None    # invalid token
     user = User.objects(username = data['name'])
     return user
@@ -310,7 +314,9 @@ def verify_password(username, password):
   auth_info = request.headers.get('Authorization')
   username = auth_info.split(':')[0]
   password = auth_info.split(':')[1]
+  print username, password
   user = User.verify_auth_token(username)
+  print user
   if user:
     g.user = user
     return True
