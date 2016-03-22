@@ -93,11 +93,7 @@ class HabitListAPI(Resource):
     super(HabitListAPI, self).__init__()
 
   def get(self):
-    print g.user.username
     active_user = User.verify_auth_token(request.headers.get('Authorization').split(':')[0])
-    print active_user.first().username
-    print type(active_user.first())
-    print active_user.first().get_user_name()
     all_habits = HabitFormat().all_habits_db_to_api(active_user.first().get_user_habits())
     return {'habits': [marshal(habit, habit_fields) for habit in all_habits]}
 
@@ -114,11 +110,8 @@ class HabitListAPI(Resource):
       'current': args['current']
     }
     db_habit = HabitDaily(name = habit['name'],streak = habit['streak'],created = habit['created'],status = habit['status'],state = habit['state'],current = habit['current'])
-    #print 'type', type(HabitDaily(active_user.first().habits))
     active_user.habits.create(db_habit)
     active_user.save()
-    print db_habit
-    print active_user.first().habits
 
     format_habit = HabitFormat().db_to_api(db_habit)
     max_id = 0
@@ -314,9 +307,7 @@ def verify_password(username, password):
   auth_info = request.headers.get('Authorization')
   username = auth_info.split(':')[0]
   password = auth_info.split(':')[1]
-  print username, password
   user = User.verify_auth_token(username)
-  print user
   if user:
     g.user = user
     return True
@@ -331,9 +322,6 @@ def verify_password(username, password):
 @crossdomain(origin='*', headers=['Content-Type', 'Authorization'])
 @auth.login_required
 def get_auth_token():
-  # active_user = User.verify_auth_token(request.headers.get('Authorization').split(':')[0])
-  print 'username', g.user.username
-  print 'habits', g.user.habits, type(g.user.habits)
   token = g.user.generate_auth_token()
   return jsonify({ 'token': token.decode('ascii') })
 
